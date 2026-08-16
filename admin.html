@@ -34,6 +34,12 @@
       <button id="download-json" class="button-primary" type="button" disabled>DOWNLOAD WORKS.JSON ↗</button>
     </section>
 
+    <section class="json-paste" aria-labelledby="json-paste-title">
+      <div><p>AI JSON IMPORT</p><h2 id="json-paste-title">貼上，然後校對。</h2><p>接受 AI 產生的單一 JSON object。若編號已存在會更新該筆；新編號則會新增到收藏最前面。</p></div>
+      <label>JSON object<textarea id="json-record" rows="12" spellcheck="false" placeholder='{"id":"04","title":"…"}'></textarea></label>
+      <button id="parse-record" class="button-secondary" type="button">PARSE INTO EDITOR ↗</button>
+    </section>
+
     <section id="editor-workspace" class="editor-workspace" hidden>
       <aside class="record-sidebar">
         <div><p>COLLECTION</p><span id="record-count">00 / 83</span></div>
@@ -46,7 +52,7 @@
           <label>作品編號<input id="work-id" inputmode="numeric" pattern="\d{2}" maxlength="2" required placeholder="04"></label>
           <label>Scene<input id="scene" required placeholder="FIELD / DAYLIGHT"></label>
         </div>
-        <label>圖片路徑<input id="image" required placeholder="assets/photo-04.jpg"></label>
+        <label>圖片檔名<span class="path-input"><span aria-hidden="true">assets/</span><input id="image-name" required placeholder="photo-04.jpg" aria-label="assets 資料夾內的圖片檔名"></span></label>
         <label>中文標題<input id="title" required placeholder="作品標題"></label>
         <label>圖片替代文字<input id="alt" required placeholder="客觀描述照片內容"></label>
         <label>收藏頁短句<textarea id="excerpt" rows="2" required></textarea></label>

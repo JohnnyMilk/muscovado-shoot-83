@@ -31,7 +31,9 @@ function setStatus(message, type = "") {
 }
 
 function normalise(record = {}) {
-  return Object.fromEntries(fields.map((field) => [field, String(record[field] ?? "").trim()]));
+  const output = Object.fromEntries(fields.map((field) => [field, String(record[field] ?? "").trim()]));
+  if (output.image && !output.image.startsWith("assets/")) output.image = `assets/${output.image.replace(/^\/+/, "")}`;
+  return output;
 }
 
 function validateCollection(value) {
@@ -53,16 +55,34 @@ function renderList() {
   list.replaceChildren();
   works.forEach((work, index) => {
     const item = document.createElement("li");
+    const row = document.createElement("div");
+    row.className = index === selectedIndex ? "is-selected" : "";
     const button = document.createElement("button");
     button.type = "button";
-    button.className = index === selectedIndex ? "is-selected" : "";
+    button.className = "record-select";
     const number = document.createElement("span");
     number.textContent = `NO.${work.id || "—"}`;
     const title = document.createElement("strong");
     title.textContent = work.title || "未命名作品";
     button.append(number, title);
     button.addEventListener("click", () => selectRecord(index));
-    item.append(button);
+    const controls = document.createElement("span");
+    controls.className = "order-controls";
+    const up = document.createElement("button");
+    up.type = "button";
+    up.textContent = "↑";
+    up.disabled = index === 0;
+    up.setAttribute("aria-label", `將 NO.${work.id} 往前移`);
+    up.addEventListener("click", () => moveRecord(index, -1));
+    const down = document.createElement("button");
+    down.type = "button";
+    down.textContent = "↓";
+    down.disabled = index === works.length - 1;
+    down.setAttribute("aria-label", `將 NO.${work.id} 往後移`);
+    down.addEventListener("click", () => moveRecord(index, 1));
+    controls.append(up, down);
+    row.append(button, controls);
+    item.append(row);
     list.append(item);
   });
   updateCount();
@@ -71,8 +91,18 @@ function renderList() {
 function selectRecord(index) {
   selectedIndex = index;
   const record = works[index];
-  fields.forEach((field) => { document.querySelector(`#${field === "id" ? "work-id" : field}`).value = record[field] || ""; });
+  fields.filter((field) => field !== "image").forEach((field) => { document.querySelector(`#${field === "id" ? "work-id" : field}`).value = record[field] || ""; });
+  document.querySelector("#image-name").value = (record.image || "").replace(/^assets\//, "");
   renderList();
+}
+
+function moveRecord(index, direction) {
+  const destination = index + direction;
+  if (destination < 0 || destination >= works.length) return;
+  [works[index], works[destination]] = [works[destination], works[index]];
+  selectedIndex = selectedIndex === index ? destination : selectedIndex === destination ? index : selectedIndex;
+  renderList();
+  setStatus("ORDER UPDATED LOCALLY · DOWNLOAD JSON TO KEEP IT", "success");
 }
 
 function nextId() {
@@ -98,14 +128,38 @@ function addRecord() {
 
 function saveRecord(event) {
   event.preventDefault();
-  const record = Object.fromEntries(fields.map((field) => {
+  const record = Object.fromEntries(fields.filter((field) => field !== "image").map((field) => {
     const elementId = field === "id" ? "work-id" : field;
     return [field, document.querySelector(`#${elementId}`).value.trim()];
   }));
+  record.image = `assets/${document.querySelector("#image-name").value.trim().replace(/^assets\//, "").replace(/^\/+/, "")}`;
   if (works.some((work, index) => work.id === record.id && index !== selectedIndex)) return setStatus(`NO.${record.id} 已經存在。`, "error");
   works[selectedIndex] = record;
   renderList();
   setStatus(`SAVED LOCALLY · NO.${record.id} ${record.title}`, "success");
+}
+
+function parseAiRecord() {
+  try {
+    const raw = document.querySelector("#json-record").value.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+    const record = normalise(JSON.parse(raw));
+    const missing = fields.filter((field) => !record[field]);
+    if (missing.length) throw new Error(`缺少 properties：${missing.join(", ")}`);
+    if (!/^\d{2}$/.test(record.id)) throw new Error("id 必須是兩位數字。");
+    const existing = works.findIndex((work) => work.id === record.id);
+    if (existing >= 0) {
+      works[existing] = record;
+      selectRecord(existing);
+      setStatus(`AI JSON PARSED · UPDATED NO.${record.id} · REVIEW BEFORE DOWNLOAD`, "success");
+    } else {
+      if (works.length >= 83) throw new Error("收藏已達 83 筆，請先刪除一筆作品。");
+      works.unshift(record);
+      selectRecord(0);
+      setStatus(`AI JSON PARSED · ADDED NO.${record.id} · REVIEW BEFORE DOWNLOAD`, "success");
+    }
+  } catch (error) {
+    setStatus(`JSON PARSE FAILED · ${error.message}`, "error");
+  }
 }
 
 function deleteRecord() {
@@ -146,6 +200,7 @@ document.querySelector("#new-collection").addEventListener("click", () => openCo
 document.querySelector("#add-record").addEventListener("click", addRecord);
 document.querySelector("#delete-record").addEventListener("click", deleteRecord);
 document.querySelector("#download-json").addEventListener("click", downloadJson);
+document.querySelector("#parse-record").addEventListener("click", parseAiRecord);
 document.querySelector("#copy-prompt").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(promptText);
