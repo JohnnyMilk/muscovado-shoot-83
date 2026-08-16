@@ -21,19 +21,15 @@ Then visit <http://localhost:8000>.
 
 ## Photography assets
 
-Add the final, web-optimised JPG files using these exact case-sensitive paths:
+Upload the final logo using this exact case-sensitive path:
 
 ```text
 Assets/logo.jpg
-Assets/photo-01.jpg
-Assets/photo-02.jpg
-Assets/photo-03.jpg
 ```
 
-Until those files are supplied, the site displays designed editorial
-placeholders. The image paths are already connected in `styles.css`, so adding
-the files requires no HTML or layout changes. Recommended: use sRGB images,
-export at roughly 2400 px on the longest edge, and keep each file below 1.5 MB.
+The three portfolio photographs currently use fixed Lorem Picsum URLs in
+`styles.css`; no local photo binaries are required. When final photography is
+ready, replace those URLs with the desired hosted or local image paths.
 
 ## Deployment
 
