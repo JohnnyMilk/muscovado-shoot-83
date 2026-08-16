@@ -64,10 +64,16 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 .rule-copy { position: relative; z-index: 1; max-width: 370px; font-size: 14px; line-height: 1.9; }
 .rule-copy strong { display: block; margin-top: 7vh; padding-top: 18px; border-top: 1px solid var(--ink); font: 500 11px/1 var(--sans); letter-spacing: .24em; }
 
-.closing { background: var(--rose); color: var(--ink); min-height: 72vh; padding: 15vh 8vw 8vh; display: flex; flex-direction: column; justify-content: space-between; }
-.closing p { margin: 0; font: 500 clamp(40px, 6.5vw, 105px)/1.05 var(--serif); letter-spacing: -.04em; }
-.closing p em { color: var(--brown); }
-.closing a { align-self: flex-end; border-bottom: 1px solid currentColor; padding: 0 0 12px; font-size: 10px; letter-spacing: .24em; }
+.closing { background: var(--rose); color: var(--ink); min-height: 76vh; padding: 12vh 8vw 7vh; display: grid; grid-template-columns: 68% 1fr; grid-template-rows: 1fr auto; gap: 8vh 6vw; position: relative; overflow: hidden; }
+.closing-title { position: relative; z-index: 1; }
+.closing-title > span { font-size: 9px; letter-spacing: .28em; }
+.closing-title h2 { margin: 5vh 0 0; font: 500 clamp(52px, 7vw, 112px)/1.03 var(--serif); letter-spacing: -.05em; }
+.closing-title h2 em { color: var(--brown); font-weight: 500; }
+.closing-note { align-self: end; position: relative; z-index: 1; }
+.closing-note p { margin: 0 0 2em; font-size: 14px; line-height: 2; }
+.closing-note p:first-child { font: italic 20px/1.35 var(--serif); }
+.closing-number { position: absolute; right: -2vw; bottom: -12vh; color: rgba(246,243,237,.28); font: 500 clamp(220px, 32vw, 480px)/1 var(--serif); letter-spacing: -.12em; }
+.closing a { align-self: end; justify-self: start; position: relative; z-index: 1; border-bottom: 1px solid currentColor; padding: 0 0 12px; font-size: 10px; letter-spacing: .24em; }
 .closing a span { font-size: 18px; margin-left: 18px; }
 footer { min-height: 100px; padding: 36px 3.5vw; display: flex; justify-content: space-between; align-items: center; font-size: 9px; letter-spacing: .22em; }
 footer b { font: inherit; }
@@ -239,9 +245,12 @@ footer b { font: inherit; }
   .rule { display: block; padding-top: 12vh; padding-bottom: 12vh; }
   .rule-number { font-size: 68vw; margin: 12vh 0 10vh; letter-spacing: -.15em; }
   .rule-copy { margin: 0 0 0 15vw; }
-  .closing { min-height: 68vh; padding: 12vh 24px 7vh; }
-  .closing p { font-size: 11vw; }
-  .closing a { align-self: flex-start; }
+  .closing { min-height: 76vh; padding: 10vh 24px 6vh; display: block; }
+  .closing-title h2 { margin-top: 4vh; font-size: 13vw; }
+  .closing-note { width: 75%; margin: 8vh 0 7vh 18vw; }
+  .closing-note p:first-child { font-size: 18px; }
+  .closing a { display: inline-block; }
+  .closing-number { right: -8vw; bottom: -4vh; font-size: 60vw; }
   footer { padding: 30px 18px; display: grid; gap: 14px; }
   .collection-header { display: block; min-height: 43vh; padding: 7vh 24px 4vh; }
   .collection-header h1 { font-size: 19vw; margin: 5vh 0; white-space: nowrap; }
