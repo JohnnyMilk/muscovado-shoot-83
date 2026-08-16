@@ -9,7 +9,7 @@ static, dependency-free website for GitHub Pages.
 - [`gallery.html`](gallery.html) — the current curated collection
 - [`work.html`](work.html) — reusable master-detail story view, selected with
   `?id=01`, `?id=02`, or `?id=03`
-- [`admin.html`](admin.html) — lightweight, browser-only collection publisher
+- [`admin.html`](admin.html) — lightweight, offline JSON collection editor
 
 Gallery photographs use native `loading="lazy"` and `decoding="async"`, so a
 future 83-work collection does not request every full image on initial load.
@@ -18,22 +18,20 @@ for that detail view lives in the small dependency-free [`script.js`](script.js)
 
 ## Collection Desk CMS
 
-`admin.html` provides a private publishing workflow without a server or build
-process. It compresses an uploaded image in the browser, converts it to JPEG,
-collects all editorial properties, uploads the result through the GitHub
-Contents API, and updates [`data/works.json`](data/works.json). The public gallery
-and detail view both read that JSON file.
+`admin.html` is an offline JSON editor without a server, login, token, or build
+process. Download [`data/works.json`](data/works.json) from GitHub, import it into
+the editor, add/delete/edit records, then download the regenerated `works.json`
+and upload it back to the same repository path. Nothing is sent from the editor
+to GitHub or another service.
 
-The publisher requires a fine-grained GitHub token with **Contents: read and
-write** permission for this repository. The token is kept only in page memory:
-it is not stored in local storage, source code, or the repository. Never commit
-a token or place one in a deployed JavaScript file. Open the CMS at
-`/admin.html`, connect, choose a photo, review the generated JPEG, complete the
-properties, and publish.
+The CMS also includes a copyable writing prompt. Submit that prompt and a work
+photo to an AI tool, then paste its proposed properties into the form. No AI API
+key is stored in or required by this site. The editor validates unique two-digit
+IDs and caps the collection at 83 records.
 
-The collection manifest is automatically capped at 83 records. Image conversion
-uses browser-native Canvas APIs; uncommon formats such as HEIC depend on the
-browser's decoding support. No OpenAI API is required for the current workflow.
+Photo files are still uploaded manually to the path recorded in each JSON item.
+If a manifest entry points to a missing photo, the public gallery and detail
+page render an editorial colour-and-pattern placeholder until the asset arrives.
 
 ## Local preview
 

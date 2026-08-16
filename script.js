@@ -13,6 +13,16 @@ function el(tag, className, text) {
   return node;
 }
 
+function addImageFallback(image, container, work) {
+  image.addEventListener("error", () => {
+    image.remove();
+    container.classList.add("image-missing");
+    const art = el("span", "missing-art");
+    art.append(el("strong", "", `NO.${work.id}`), el("small", "", "IMAGE PENDING"));
+    container.prepend(art);
+  }, { once: true });
+}
+
 function renderGallery(works) {
   const grid = document.querySelector("#gallery-grid");
   grid.replaceChildren();
@@ -34,6 +44,7 @@ function renderGallery(works) {
     image.loading = "lazy";
     image.decoding = "async";
     image.style.objectPosition = work.position || "center";
+    addImageFallback(image, figure, work);
     figure.append(image, el("span", "placeholder-label", `IMAGE / ${work.id}`));
     const mark = el("span", "watermark");
     mark.innerHTML = "MS<sup>83</sup>";
@@ -64,6 +75,7 @@ function renderDetail(works) {
   image.alt = work.alt;
   image.fetchPriority = "high";
   image.decoding = "async";
+  addImageFallback(image, figure, work);
   const mark = el("span", "watermark");
   mark.innerHTML = "MS<sup>83</sup>";
   figure.append(image, mark);
