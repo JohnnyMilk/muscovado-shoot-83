@@ -11,60 +11,55 @@
 <body class="admin-page">
   <header class="site-header">
     <a class="monogram" href="index.html">MS<sup>83</sup></a>
-    <span class="wordmark">COLLECTION DESK</span>
+    <span class="wordmark">COLLECTION DESK / OFFLINE</span>
     <a class="admin-exit" href="gallery.html">VIEW SITE ↗</a>
   </header>
 
   <main class="admin-shell">
     <header class="admin-intro">
-      <p>PRIVATE PUBLISHING TOOL</p>
-      <h1>新增一個<br><em>值得留下的故事。</em></h1>
-      <p>照片在瀏覽器內完成縮圖、壓縮與 JPEG 轉換，再透過 GitHub API 發佈。Token 只停留在這個頁面的記憶體中。</p>
+      <p>LOCAL JSON EDITOR</p>
+      <h1>整理一份<br><em>值得留下的收藏。</em></h1>
+      <p>所有內容只在你的瀏覽器中處理。匯入 GitHub 下載的 works.json，新增、修改或刪除作品，最後下載新的 JSON 再自行上傳。</p>
     </header>
 
-    <form id="cms-form" class="cms-form">
-      <fieldset>
-        <legend>01 / CONNECT</legend>
-        <label>Fine-grained GitHub token<input id="token" type="password" autocomplete="off" required placeholder="github_pat_…"></label>
-        <div class="field-pair">
-          <label>Owner<input id="owner" value="JohnnyMilk" required></label>
-          <label>Repository<input id="repo" value="muscovado-shoot-83" required></label>
-        </div>
-        <label>Branch<input id="branch" value="main" required></label>
-        <button id="load-collection" class="button-secondary" type="button">CONNECT & LOAD COLLECTION</button>
-      </fieldset>
+    <section class="cms-prompt" aria-labelledby="prompt-title">
+      <div><p>AI WRITING BRIEF</p><h2 id="prompt-title">先讓 AI 理解這本雜誌。</h2><p>將提示詞連同作品照片交給 AI，再把產生的 properties 貼回編輯器。</p></div>
+      <textarea id="ai-prompt" rows="14" readonly></textarea>
+      <button id="copy-prompt" class="button-secondary" type="button">COPY PROMPT</button>
+    </section>
 
-      <fieldset>
-        <legend>02 / IMAGE</legend>
-        <label class="file-drop">選擇原始照片<input id="photo" type="file" accept="image/*" required><span>PNG, HEIC*, WEBP or JPEG · browser support applies</span></label>
-        <div class="image-preview" id="image-preview"><span>PREVIEW</span></div>
-        <div class="field-pair">
-          <label>最長邊（px）<input id="max-size" type="number" min="800" max="3000" step="100" value="1800"></label>
-          <label>JPEG 品質<input id="quality" type="number" min="0.5" max="0.95" step="0.05" value="0.82"></label>
-        </div>
-        <p id="image-result" class="form-hint">選擇照片後，會在你的 iPad 內完成壓縮，不會傳送至其他圖片服務。</p>
-      </fieldset>
+    <section class="json-toolbar" aria-label="JSON 檔案操作">
+      <label class="file-drop compact">匯入 works.json<input id="json-file" type="file" accept="application/json,.json"><span>內容不會上傳到任何服務</span></label>
+      <button id="new-collection" class="button-secondary" type="button">START EMPTY</button>
+      <button id="download-json" class="button-primary" type="button" disabled>DOWNLOAD WORKS.JSON ↗</button>
+    </section>
 
-      <fieldset>
-        <legend>03 / PROPERTIES</legend>
+    <section id="editor-workspace" class="editor-workspace" hidden>
+      <aside class="record-sidebar">
+        <div><p>COLLECTION</p><span id="record-count">00 / 83</span></div>
+        <ol id="record-list"></ol>
+        <button id="add-record" class="button-secondary" type="button">＋ ADD A WORK</button>
+      </aside>
+
+      <form id="record-form" class="record-form">
         <div class="field-pair">
-          <label>作品編號<input id="work-id" inputmode="numeric" maxlength="2" required placeholder="04"></label>
+          <label>作品編號<input id="work-id" inputmode="numeric" pattern="\d{2}" maxlength="2" required placeholder="04"></label>
           <label>Scene<input id="scene" required placeholder="FIELD / DAYLIGHT"></label>
         </div>
+        <label>圖片路徑<input id="image" required placeholder="assets/photo-04.jpg"></label>
         <label>中文標題<input id="title" required placeholder="作品標題"></label>
         <label>圖片替代文字<input id="alt" required placeholder="客觀描述照片內容"></label>
         <label>收藏頁短句<textarea id="excerpt" rows="2" required></textarea></label>
         <label>完整故事<textarea id="story" rows="5" required></textarea></label>
         <label>Editorial note<textarea id="note" rows="3" required></textarea></label>
         <label>圖片焦點<input id="position" value="center center" placeholder="center 45%"></label>
-      </fieldset>
-
-      <section class="publish-panel">
-        <div><p>THE 83 RULE</p><p>新作品會排在最前面；JSON 收藏只保留最新 83 筆資料。</p></div>
-        <button class="button-primary" type="submit">PUBLISH TO MAIN ↗</button>
-      </section>
-      <output id="cms-status" class="cms-status" aria-live="polite">WAITING FOR A NEW STORY.</output>
-    </form>
+        <div class="record-actions">
+          <button class="button-primary" type="submit">SAVE CHANGES</button>
+          <button id="delete-record" class="button-danger" type="button">DELETE WORK</button>
+        </div>
+      </form>
+    </section>
+    <output id="cms-status" class="cms-status" aria-live="polite">IMPORT A WORKS.JSON FILE TO BEGIN.</output>
   </main>
 </body>
 </html>
