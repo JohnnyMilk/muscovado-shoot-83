@@ -27,9 +27,15 @@ The transparent logo is loaded from this exact case-sensitive path:
 assets/logo.png
 ```
 
-The three portfolio photographs currently use fixed Lorem Picsum URLs in
-`styles.css`; no local photo binaries are required. When final photography is
-ready, replace those URLs with the desired hosted or local image paths.
+The final portfolio photographs are loaded from the existing GitHub assets:
+
+```text
+assets/photo-01.jpg  # 黃花之間
+assets/photo-02.jpg  # 那個眼神
+assets/photo-03.jpg  # 紅色習作
+```
+
+All image paths are relative and case-sensitive for GitHub Pages.
 
 ## Deployment
 

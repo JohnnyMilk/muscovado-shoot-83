@@ -35,9 +35,9 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 .hero-slogan { font-family: var(--serif); font-style: italic; font-size: clamp(21px, 2.2vw, 38px); line-height: 1.15; margin-left: 16vw; }
 .image-frame { background-color: var(--cream); background-size: cover; background-position: center; position: relative; overflow: hidden; }
 .hero-image { min-height: 68vh; align-self: center; }
-.photo-03 { background-image: linear-gradient(rgba(61, 52, 42, .08), rgba(61, 52, 42, .08)), url("https://picsum.photos/id/1025/1600/2000"); }
-.photo-02 { background-image: linear-gradient(rgba(61, 52, 42, .06), rgba(61, 52, 42, .06)), url("https://picsum.photos/id/237/1600/2000"); }
-.photo-01 { background-image: linear-gradient(rgba(61, 52, 42, .1), rgba(61, 52, 42, .1)), url("https://picsum.photos/id/1062/1600/1200"); }
+.image-flower { background-image: linear-gradient(rgba(61, 52, 42, .05), rgba(61, 52, 42, .05)), url("assets/photo-01.jpg"); background-position: center 52%; }
+.image-portrait { background-image: linear-gradient(rgba(61, 52, 42, .04), rgba(61, 52, 42, .04)), url("assets/photo-02.jpg"); background-position: center 42%; }
+.image-red-study { background-image: linear-gradient(rgba(61, 52, 42, .06), rgba(61, 52, 42, .06)), url("assets/photo-03.jpg"); background-position: center 38%; }
 .placeholder-label { position: absolute; left: 18px; top: 18px; font-size: 9px; letter-spacing: .22em; color: rgba(255,255,255,.82); }
 .watermark { position: absolute; right: 18px; bottom: 16px; font-family: var(--serif); font-size: 14px; color: rgba(255,255,255,.88); text-shadow: 0 1px 8px rgba(0,0,0,.25); }
 .vertical-note { align-self: center; justify-self: end; writing-mode: vertical-rl; font-size: 9px; letter-spacing: .3em; }
