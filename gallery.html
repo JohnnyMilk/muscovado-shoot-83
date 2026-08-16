@@ -6,6 +6,7 @@
   <meta name="description" content="MUSCOVADO SHOOT⁸³ 目前收藏 — 只留下值得留下的寵物攝影作品。">
   <title>目前收藏 — MUSCOVADO SHOOT⁸³</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
 <body class="gallery-page">
   <header class="site-header">
@@ -21,46 +22,18 @@
     <header class="collection-header">
       <p class="eyebrow">THE CURRENT COLLECTION</p>
       <h1>目前收藏</h1>
-      <p class="collection-count"><span>03</span> / 83</p>
+      <p class="collection-count"><span id="collection-current">03</span> / 83</p>
       <p class="collection-note">Three frames.<br>Three stories kept.</p>
     </header>
 
     <aside class="collection-guide" aria-label="收藏瀏覽方式">
       <p>THE EDIT</p>
-      <p>作品以輕量縮圖延遲載入；選擇一張照片，進入完整故事。</p>
+      <p>選擇一張照片，走進畫面留下的完整故事。</p>
       <span>SCROLL TO BROWSE ↓</span>
     </aside>
 
-    <section class="editorial-grid" aria-label="攝影作品">
-      <article class="work work-03">
-        <a href="work.html?id=03" aria-label="閱讀 NO.03 黃花之間完整故事">
-          <figure class="image-frame work-image"><img src="assets/photo-01.jpg" alt="狗站在黃花之間" loading="lazy" decoding="async"><span class="placeholder-label">IMAGE / 03</span><span class="watermark">MS<sup>83</sup></span></figure>
-          <div class="work-meta"><span>NO.03</span><span>FIELD / DAYLIGHT</span></div>
-          <h2>黃花之間</h2>
-          <p>一條路、一片花田，以及一隻突然停下來看向遠方的狗。</p>
-          <span class="read-story">READ THE STORY ↗</span>
-        </a>
-      </article>
-
-      <article class="work work-02">
-        <a href="work.html?id=02" aria-label="閱讀 NO.02 那個眼神完整故事">
-          <figure class="image-frame work-image"><img src="assets/photo-02.jpg" alt="狗的近距離肖像" loading="lazy" decoding="async"><span class="placeholder-label">IMAGE / 02</span><span class="watermark">MS<sup>83</sup></span></figure>
-          <div class="work-meta"><span>NO.02</span><span>PORTRAIT / CLOSE-UP</span></div>
-          <h2>那個眼神</h2>
-          <p>每天都會看到的臉，換一個觀看方式，就成為一張真正的肖像。</p>
-          <span class="read-story">READ THE STORY ↗</span>
-        </a>
-      </article>
-
-      <article class="work work-01">
-        <a href="work.html?id=01" aria-label="閱讀 NO.01 紅色習作完整故事">
-          <figure class="image-frame work-image"><img src="assets/photo-03.jpg" alt="狗倚著紅色靠墊休息" loading="lazy" decoding="async"><span class="placeholder-label">IMAGE / 01</span><span class="watermark">MS<sup>83</sup></span></figure>
-          <div class="work-meta"><span>NO.01</span><span>INTERIOR / RED STUDY</span></div>
-          <h2>紅色習作</h2>
-          <p>紅色靠墊、黑色毛髮，以及下一個動作發生之前的表情。</p>
-          <span class="read-story">READ THE STORY ↗</span>
-        </a>
-      </article>
+    <section id="gallery-grid" class="editorial-grid" aria-label="攝影作品" aria-live="polite">
+      <p class="collection-loading">LOADING THE COLLECTION…</p>
     </section>
 
     <section class="closing" aria-label="品牌結語">
@@ -70,7 +43,7 @@
   </main>
 
   <footer>
-    <span>03 WORKS / 83 MAXIMUM</span>
+    <span><b id="collection-total">03</b> WORKS / 83 MAXIMUM</span>
     <span>CURATED, NOT ACCUMULATED.</span>
   </footer>
 </body>

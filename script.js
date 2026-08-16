@@ -1,52 +1,100 @@
-const works = {
-  "03": {
-    title: "黃花之間",
-    scene: "FIELD / DAYLIGHT",
-    image: "assets/photo-01.jpg",
-    alt: "狗站在一條穿過黃花田的小路上",
-    story: "沒有特別要求牠擺姿勢。只是有一條路、一片花田，以及一隻突然決定停下來看向遠方的狗。那一刻，平常的日子突然有了一點時裝雜誌的味道。",
-    note: "光線沒有被安排，姿勢也沒有。留下來的，是牠選擇停下的那一秒。"
-  },
-  "02": {
-    title: "那個眼神",
-    scene: "PORTRAIT / CLOSE-UP",
-    image: "assets/photo-02.jpg",
-    alt: "坐在沙發上的狗的近距離肖像",
-    story: "同一張每天都會看到的臉，只要換一個觀看方式，就會變成一張真正的肖像。",
-    note: "Portrait 不一定需要距離。熟悉，反而讓我們更靠近牠真正的表情。"
-  },
-  "01": {
-    title: "紅色習作",
-    scene: "INTERIOR / RED STUDY",
-    image: "assets/photo-03.jpg",
-    alt: "狗倚著紅色靠墊休息",
-    story: "紅色靠墊、黑色毛髮，還有那個介於清醒與休息之間的表情。最好的畫面，有時候就在下一個動作發生之前。",
-    note: "色彩先進入畫面，情緒隨後抵達。這是一張關於等待的習作。"
-  }
-};
+const DATA_URL = "data/works.json";
 
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id") || "03";
-const work = works[id] || works["03"];
-const detail = document.querySelector("#work-detail");
+async function loadWorks() {
+  const response = await fetch(DATA_URL, { cache: "no-cache" });
+  if (!response.ok) throw new Error(`Collection unavailable (${response.status})`);
+  return response.json();
+}
 
-document.title = `${work.title} — MUSCOVADO SHOOT⁸³`;
-detail.innerHTML = `
-  <header class="detail-heading">
-    <p>THE CURRENT COLLECTION / NO.${id}</p>
-    <h1>${work.title}</h1>
-    <span>${work.scene}</span>
-  </header>
-  <figure class="detail-figure">
-    <img src="${work.image}" alt="${work.alt}" fetchpriority="high" decoding="async">
-    <span class="watermark">MS<sup>83</sup></span>
-  </figure>
-  <article class="detail-story">
-    <p class="detail-number">${id}<small>/ 83</small></p>
-    <div><p>${work.story}</p><p>${work.note}</p></div>
-  </article>
-  <nav class="detail-nav" aria-label="作品切換">
-    <a href="work.html?id=${id === "01" ? "03" : String(Number(id) - 1).padStart(2, "0")}">PREVIOUS STORY ←</a>
-    <a href="gallery.html">ALL WORKS</a>
-    <a href="work.html?id=${id === "03" ? "01" : String(Number(id) + 1).padStart(2, "0")}">NEXT STORY →</a>
-  </nav>`;
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+function renderGallery(works) {
+  const grid = document.querySelector("#gallery-grid");
+  grid.replaceChildren();
+  const count = String(Math.min(works.length, 83)).padStart(2, "0");
+  document.querySelector("#collection-current").textContent = count;
+  document.querySelector("#collection-total").textContent = count;
+
+  works.slice(0, 83).forEach((work, index) => {
+    const layout = ["03", "02", "01"][index % 3];
+    const article = el("article", `work work-${layout}`);
+    const link = el("a");
+    link.href = `work.html?id=${encodeURIComponent(work.id)}`;
+    link.setAttribute("aria-label", `閱讀 NO.${work.id} ${work.title}完整故事`);
+
+    const figure = el("figure", "image-frame work-image");
+    const image = el("img");
+    image.src = work.image;
+    image.alt = work.alt;
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.style.objectPosition = work.position || "center";
+    figure.append(image, el("span", "placeholder-label", `IMAGE / ${work.id}`));
+    const mark = el("span", "watermark");
+    mark.innerHTML = "MS<sup>83</sup>";
+    figure.append(mark);
+
+    const meta = el("div", "work-meta");
+    meta.append(el("span", "", `NO.${work.id}`), el("span", "", work.scene));
+    link.append(figure, meta, el("h2", "", work.title), el("p", "", work.excerpt), el("span", "read-story", "READ THE STORY ↗"));
+    article.append(link);
+    grid.append(article);
+  });
+}
+
+function renderDetail(works) {
+  const detail = document.querySelector("#work-detail");
+  const requestedId = new URLSearchParams(window.location.search).get("id");
+  const index = Math.max(0, works.findIndex((item) => item.id === requestedId));
+  const work = works[index] || works[0];
+  const previous = works[(index - 1 + works.length) % works.length];
+  const next = works[(index + 1) % works.length];
+  document.title = `${work.title} — MUSCOVADO SHOOT⁸³`;
+
+  const heading = el("header", "detail-heading");
+  heading.append(el("p", "", `THE CURRENT COLLECTION / NO.${work.id}`), el("h1", "", work.title), el("span", "", work.scene));
+  const figure = el("figure", "detail-figure");
+  const image = el("img");
+  image.src = work.image;
+  image.alt = work.alt;
+  image.fetchPriority = "high";
+  image.decoding = "async";
+  const mark = el("span", "watermark");
+  mark.innerHTML = "MS<sup>83</sup>";
+  figure.append(image, mark);
+
+  const story = el("article", "detail-story");
+  const number = el("p", "detail-number", work.id);
+  number.append(el("small", "", "/ 83"));
+  const copy = el("div");
+  copy.append(el("p", "", work.story), el("p", "", work.note));
+  story.append(number, copy);
+
+  const nav = el("nav", "detail-nav");
+  nav.setAttribute("aria-label", "作品切換");
+  const previousLink = el("a", "", "PREVIOUS STORY ←");
+  previousLink.href = `work.html?id=${encodeURIComponent(previous.id)}`;
+  const all = el("a", "", "ALL WORKS");
+  all.href = "gallery.html";
+  const nextLink = el("a", "", "NEXT STORY →");
+  nextLink.href = `work.html?id=${encodeURIComponent(next.id)}`;
+  nav.append(previousLink, all, nextLink);
+  detail.replaceChildren(heading, figure, story, nav);
+}
+
+loadWorks()
+  .then((works) => {
+    if (!Array.isArray(works) || works.length === 0) throw new Error("The collection is empty");
+    if (document.querySelector("#gallery-grid")) renderGallery(works);
+    if (document.querySelector("#work-detail")) renderDetail(works);
+  })
+  .catch((error) => {
+    const target = document.querySelector("#gallery-grid, #work-detail");
+    if (target) target.replaceChildren(el("p", "collection-error", "收藏暫時無法載入，請稍後再試。"));
+    console.error(error);
+  });
