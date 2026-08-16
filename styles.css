@@ -3,11 +3,11 @@
 :root {
   --ink: #24221f;
   --paper: #f1ede4;
-  --cream: #e7dfd0;
-  --caramel: #a96942;
-  --brown: #5c4032;
-  --sage: #92998c;
-  --rose: #ad8f8a;
+  --cream: #e9dfcf;
+  --caramel: #b97843;
+  --brown: #493126;
+  --sage: #92978a;
+  --rose: #aa8b83;
   --line: rgba(36, 34, 31, .25);
   --serif: "Playfair Display", "Times New Roman", serif;
   --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
@@ -35,9 +35,9 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 .hero-slogan { font-family: var(--serif); font-style: italic; font-size: clamp(21px, 2.2vw, 38px); line-height: 1.15; margin-left: 16vw; }
 .image-frame { background-color: var(--cream); background-size: cover; background-position: center; position: relative; overflow: hidden; }
 .hero-image { min-height: 68vh; align-self: center; }
-.photo-03 { background-image: url("Assets/photo-03.jpg"), linear-gradient(145deg, #a4a994 0%, #727a66 45%, #c3a66c 100%); }
-.photo-02 { background-image: url("Assets/photo-02.jpg"), linear-gradient(150deg, #c5b5a8 0%, #84766d 50%, #4e4a42 100%); }
-.photo-01 { background-image: url("Assets/photo-01.jpg"), linear-gradient(145deg, #ad7670 0%, #754945 52%, #302d2a 100%); }
+.photo-03 { background-image: linear-gradient(rgba(61, 52, 42, .08), rgba(61, 52, 42, .08)), url("https://picsum.photos/id/1025/1600/2000"); }
+.photo-02 { background-image: linear-gradient(rgba(61, 52, 42, .06), rgba(61, 52, 42, .06)), url("https://picsum.photos/id/237/1600/2000"); }
+.photo-01 { background-image: linear-gradient(rgba(61, 52, 42, .1), rgba(61, 52, 42, .1)), url("https://picsum.photos/id/1062/1600/1200"); }
 .placeholder-label { position: absolute; left: 18px; top: 18px; font-size: 9px; letter-spacing: .22em; color: rgba(255,255,255,.82); }
 .watermark { position: absolute; right: 18px; bottom: 16px; font-family: var(--serif); font-size: 14px; color: rgba(255,255,255,.88); text-shadow: 0 1px 8px rgba(0,0,0,.25); }
 .vertical-note { align-self: center; justify-self: end; writing-mode: vertical-rl; font-size: 9px; letter-spacing: .3em; }
@@ -50,11 +50,8 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 .story-copy p { margin: 0 0 1.4em; }
 
 .brand-spread { background: var(--sage); padding-top: 13vh; padding-bottom: 13vh; display: grid; grid-template-columns: 70% 1fr; gap: 8%; align-items: end; }
-.logo-card { aspect-ratio: 16/9; background-color: var(--caramel); background-image: url("Assets/logo.jpg"), linear-gradient(135deg, #b77b4e, #8d5638); box-shadow: 24px 28px 0 rgba(50, 43, 36, .16); display: grid; place-items: center; }
-.logo-placeholder { text-align: center; color: #f4eadb; text-shadow: 0 3px 12px rgba(61,34,20,.22); }
-.logo-placeholder span { display: block; font: 500 clamp(12px, 1.5vw, 24px)/1 var(--sans); letter-spacing: .32em; }
-.logo-placeholder strong { display: block; font: 500 clamp(58px, 10vw, 160px)/.95 var(--serif); letter-spacing: -.07em; }
-.logo-placeholder small { font-size: 9px; letter-spacing: .35em; }
+.logo-card { aspect-ratio: 16/9; background: linear-gradient(145deg, #eee4d5, #dfcfba); box-shadow: 0 30px 55px rgba(55, 37, 28, .18), 24px 28px 0 rgba(50, 43, 36, .14); display: grid; place-items: center; overflow: hidden; }
+.logo-card img { display: block; width: min(72%, 780px); height: 88%; object-fit: contain; filter: drop-shadow(0 8px 7px rgba(49, 31, 22, .2)); }
 .brand-note { color: #f0ece3; }
 .brand-note span { font-size: 9px; letter-spacing: .3em; }
 .brand-note p { font: italic clamp(24px, 2.5vw, 40px)/1.25 var(--serif); }
