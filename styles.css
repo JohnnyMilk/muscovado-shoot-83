@@ -3,11 +3,11 @@
 :root {
   --ink: #24221f;
   --paper: #f1ede4;
-  --cream: #e7dfd0;
-  --caramel: #a96942;
-  --brown: #5c4032;
-  --sage: #92998c;
-  --rose: #ad8f8a;
+  --cream: #e9dfcf;
+  --caramel: #b97843;
+  --brown: #493126;
+  --sage: #92978a;
+  --rose: #aa8b83;
   --line: rgba(36, 34, 31, .25);
   --serif: "Playfair Display", "Times New Roman", serif;
   --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
@@ -50,11 +50,8 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 .story-copy p { margin: 0 0 1.4em; }
 
 .brand-spread { background: var(--sage); padding-top: 13vh; padding-bottom: 13vh; display: grid; grid-template-columns: 70% 1fr; gap: 8%; align-items: end; }
-.logo-card { aspect-ratio: 16/9; background-color: var(--caramel); background-image: url("Assets/logo.jpg"), linear-gradient(135deg, #b77b4e, #8d5638); box-shadow: 24px 28px 0 rgba(50, 43, 36, .16); display: grid; place-items: center; }
-.logo-placeholder { text-align: center; color: #f4eadb; text-shadow: 0 3px 12px rgba(61,34,20,.22); }
-.logo-placeholder span { display: block; font: 500 clamp(12px, 1.5vw, 24px)/1 var(--sans); letter-spacing: .32em; }
-.logo-placeholder strong { display: block; font: 500 clamp(58px, 10vw, 160px)/.95 var(--serif); letter-spacing: -.07em; }
-.logo-placeholder small { font-size: 9px; letter-spacing: .35em; }
+.logo-card { aspect-ratio: 16/9; background: linear-gradient(145deg, #eee4d5, #dfcfba); box-shadow: 0 30px 55px rgba(55, 37, 28, .18), 24px 28px 0 rgba(50, 43, 36, .14); display: grid; place-items: center; overflow: hidden; }
+.logo-card img { display: block; width: min(72%, 780px); height: 88%; object-fit: contain; filter: drop-shadow(0 8px 7px rgba(49, 31, 22, .2)); }
 .brand-note { color: #f0ece3; }
 .brand-note span { font-size: 9px; letter-spacing: .3em; }
 .brand-note p { font: italic clamp(24px, 2.5vw, 40px)/1.25 var(--serif); }

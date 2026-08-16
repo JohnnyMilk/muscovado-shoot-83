@@ -21,10 +21,10 @@ Then visit <http://localhost:8000>.
 
 ## Photography assets
 
-Upload the final logo using this exact case-sensitive path:
+The transparent logo is loaded from this exact case-sensitive path:
 
 ```text
-Assets/logo.jpg
+assets/logo.png
 ```
 
 The three portfolio photographs currently use fixed Lorem Picsum URLs in
