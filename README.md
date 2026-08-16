@@ -25,9 +25,15 @@ and upload it back to the same repository path. Nothing is sent from the editor
 to GitHub or another service.
 
 The CMS also includes a copyable writing prompt. Submit that prompt and a work
-photo to an AI tool, then paste its proposed properties into the form. No AI API
-key is stored in or required by this site. The editor validates unique two-digit
-IDs and caps the collection at 83 records.
+photo to an AI tool, then paste the returned JSON object into **AI JSON IMPORT**.
+The editor parses it into the property form for review; an existing ID is
+updated and a new ID is added to the beginning. No AI API key is stored in or
+required by this site.
+
+Records can be added, edited, deleted, and moved forward/backward in the final
+array order. The editor validates unique two-digit IDs and caps the collection
+at 83 records. Image paths always live under `assets/`, so the form presents
+that prefix as fixed, muted text and only asks for the filename.
 
 Photo files are still uploaded manually to the path recorded in each JSON item.
 If a manifest entry points to a missing photo, the public gallery and detail
