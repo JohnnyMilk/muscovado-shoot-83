@@ -7,6 +7,13 @@ static, dependency-free website for GitHub Pages.
 
 - [`index.html`](index.html) — brand story and THE 83 RULE
 - [`gallery.html`](gallery.html) — the current curated collection
+- [`work.html`](work.html) — reusable master-detail story view, selected with
+  `?id=01`, `?id=02`, or `?id=03`
+
+Gallery photographs use native `loading="lazy"` and `decoding="async"`, so a
+future 83-work collection does not request every full image on initial load.
+Only the selected photograph is prioritised on the detail page. Work metadata
+for that detail view lives in the small dependency-free [`script.js`](script.js).
 
 ## Local preview
 
