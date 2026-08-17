@@ -67,6 +67,13 @@ assets/photo-02.jpg  # 那個眼神
 assets/photo-03.jpg  # 紅色習作
 ```
 
+The About hero uses a dedicated, non-collection copy so the 83-work curation
+cycle cannot remove the homepage image:
+
+```text
+assets/about-hero.jpg
+```
+
 All image paths are relative and case-sensitive for GitHub Pages.
 
 ## Deployment
