@@ -1,6 +1,7 @@
 # MUSCOVADO SHOOT⁸³
 
-Editorial pet photography portfolio for **MUSCOVADO SHOOT⁸³** — built as a
+Editorial photography portfolio for **MUSCOVADO SHOOT⁸³** — beginning with
+companion animals and extending to people, landscapes, and everyday scenes. Built as a
 static, dependency-free website for GitHub Pages.
 
 ## Pages
@@ -53,10 +54,10 @@ Then visit <http://localhost:8000>.
 
 ## Photography assets
 
-The transparent logo is loaded from this exact case-sensitive path:
+The finished Morandi-gray logo card is loaded from this exact case-sensitive path:
 
 ```text
-assets/logo.png
+assets/morandi_gray_logo.jpg
 ```
 
 The final portfolio photographs are loaded from the existing GitHub assets:

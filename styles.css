@@ -51,9 +51,9 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 .story-copy { margin-top: 20vh; max-width: 420px; font-size: 15px; line-height: 2.1; }
 .story-copy p { margin: 0 0 1.4em; }
 
-.brand-spread { background: var(--graphite); padding-top: 13vh; padding-bottom: 13vh; display: grid; grid-template-columns: 70% 1fr; gap: 8%; align-items: end; }
-.logo-card { aspect-ratio: 16/9; background: var(--graphite); box-shadow: none; display: grid; place-items: center; overflow: hidden; }
-.logo-card img { display: block; width: min(72%, 780px); height: 88%; object-fit: contain; filter: drop-shadow(3px 7px 12px rgba(0,0,0,.42)) drop-shadow(-2px -2px 3px rgba(255,255,255,.6)); }
+.brand-spread { background: var(--graphite); padding-top: 6vh; padding-bottom: 6vh; display: grid; grid-template-columns: 76% 1fr; gap: 6%; align-items: end; }
+.logo-card { height: clamp(300px, 48vw, 600px); background: var(--graphite); display: grid; place-items: center; overflow: hidden; }
+.logo-card img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .brand-note { color: var(--paper); }
 .brand-note span { font-size: 9px; letter-spacing: .3em; }
 .brand-note p { font: italic clamp(24px, 2.5vw, 40px)/1.25 var(--serif); }
@@ -204,7 +204,7 @@ footer b { font: inherit; }
   .story { grid-template-columns: 18% 1fr; padding-top: 13vh; padding-bottom: 15vh; }
   .story-heading { grid-column: 2; }
   .story-copy { grid-column: 2; margin-top: 9vh; }
-  .brand-spread { grid-template-columns: 1fr; gap: 7vh; }
+  .brand-spread { grid-template-columns: 1fr; gap: 4vh; padding-top: 5vh; padding-bottom: 5vh; }
   .brand-note { margin-left: 55%; }
   .rule { min-height: auto; grid-template-columns: 1fr 1fr; padding-top: 14vh; }
   .rule-intro { grid-column: 1/-1; }
@@ -239,8 +239,8 @@ footer b { font: inherit; }
   .story { display: block; padding-top: 12vh; padding-bottom: 13vh; }
   .story h2 { margin-top: 7vh; font-size: 13vw; }
   .story-copy { margin: 8vh 0 0 15vw; }
-  .brand-spread { padding-top: 9vh; padding-bottom: 10vh; }
-  .logo-card { aspect-ratio: 4/3; box-shadow: none; }
+  .brand-spread { padding-top: 4vh; padding-bottom: 5vh; }
+  .logo-card { height: min(92vw, 470px); }
   .brand-note { margin: 2vh 0 0 30%; }
   .rule { display: block; padding-top: 12vh; padding-bottom: 12vh; }
   .rule-number { font-size: 68vw; margin: 12vh 0 10vh; letter-spacing: -.15em; }

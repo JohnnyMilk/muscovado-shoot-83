@@ -6,9 +6,11 @@ const form = document.querySelector("#record-form");
 let works = [];
 let selectedIndex = -1;
 
-const promptText = `你是一位時裝雜誌的寵物攝影編輯。請仔細觀察我上傳的作品照片，為 MUSCOVADO SHOOT⁸³ 產生一筆 JSON property 初稿。
+const promptText = `你是一位時裝雜誌與攝影師 portfolio 的圖片編輯。請仔細觀察我上傳的作品照片，為 MUSCOVADO SHOOT⁸³ 產生一筆 JSON property 初稿。
 
-品牌語氣：簡約、克制、有畫面感；像攝影師 portfolio 與 fashion editorial，不使用浮誇、可愛或推銷式語言。使用繁體中文，攝影術語與 scene 保留英文。
+MUSCOVADO SHOOT⁸³ 從寵物攝影開始，但收藏不限於寵物，也包含人物、風景、城市、靜物與日常片刻。請先依照片本身判斷主題，不要預設畫面中一定有寵物，也不要為沒有生命的景物套用寵物敘事。
+
+品牌語氣：簡約、克制、有畫面感；像攝影師 portfolio 與 fashion editorial，不使用浮誇、過度可愛或推銷式語言。使用繁體中文，攝影術語與 scene 保留英文。所有文字只能根據畫面可見資訊書寫；不確定的身分、地點、關係與事件不要猜測。
 
 請只輸出一個 JSON object，不要 Markdown code fence，也不要補充說明。格式如下：
 {
@@ -18,7 +20,7 @@ const promptText = `你是一位時裝雜誌的寵物攝影編輯。請仔細觀
   "image": "assets/photo-編號.jpg",
   "alt": "客觀、簡潔的繁體中文圖片描述，供無障礙使用",
   "excerpt": "30 至 55 字的收藏頁短句",
-  "story": "80 至 150 字的完整故事；只寫照片能支持的觀察，不虛構寵物背景",
+  "story": "80 至 150 字的完整故事；只寫照片能支持的觀察，不虛構人物、動物、地點或事件背景",
   "note": "25 至 60 字的 editorial note，可談光線、色彩、姿勢或觀看方式",
   "position": "建議的 CSS object-position，例如 center 45%"
 }`;
