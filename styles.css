@@ -45,20 +45,13 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 .vertical-note { align-self: center; justify-self: end; writing-mode: vertical-rl; font-size: 9px; letter-spacing: .3em; }
 .section-pad { padding-left: 8vw; padding-right: 8vw; }
 
-.story { padding-top: 18vh; padding-bottom: 20vh; display: grid; grid-template-columns: 16% 45% 31%; column-gap: 4%; align-items: start; }
+.story { padding-top: 18vh; padding-bottom: 16vh; display: grid; grid-template-columns: 16% 45% 31%; column-gap: 4%; align-items: start; }
 .story h2, .rule h2 { font-family: var(--serif); font-size: clamp(48px, 6vw, 94px); font-weight: 500; line-height: 1.08; letter-spacing: -.05em; margin: 0; }
 .story h2 em { display: inline-block; color: var(--caramel); font-size: .82em; font-weight: 500; white-space: nowrap; }
 .story-copy { margin-top: 20vh; max-width: 420px; font-size: 15px; line-height: 2.1; }
 .story-copy p { margin: 0 0 1.4em; }
 
-.brand-spread { background: var(--graphite); padding-top: 3vh; padding-bottom: 4vh; display: grid; grid-template-columns: 76% 1fr; gap: 6%; align-items: end; }
-.logo-card { height: clamp(320px, 40vw, 560px); background: var(--graphite); display: grid; place-items: center; overflow: hidden; }
-.logo-card img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 49%; }
-.brand-note { color: var(--paper); }
-.brand-note span { font-size: 9px; letter-spacing: .3em; }
-.brand-note p { white-space: nowrap; font: italic clamp(20px, 2.1vw, 34px)/1.25 var(--serif); }
-
-.rule { min-height: 100vh; padding-top: 17vh; padding-bottom: 14vh; display: grid; grid-template-columns: 36% 34% 30%; align-items: center; overflow: hidden; }
+.rule { min-height: 88vh; padding-top: 14vh; padding-bottom: 12vh; background: var(--cream); display: grid; grid-template-columns: 36% 34% 30%; align-items: center; overflow: hidden; }
 .rule-intro { align-self: start; }
 .rule-intro h2 { margin-top: 10vh; font-size: clamp(44px, 5vw, 80px); }
 .rule-number { font: 500 clamp(220px, 32vw, 520px)/.7 var(--serif); letter-spacing: -.12em; color: var(--oat); transform: translateX(-6%); }
@@ -75,6 +68,17 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 .closing-number { position: absolute; right: 5vw; top: 50%; color: transparent; -webkit-text-stroke: 1px rgba(53,50,47,.13); font: 500 clamp(190px, 27vw, 390px)/.7 var(--serif); letter-spacing: -.12em; transform: translateY(-50%); }
 .closing a { align-self: end; justify-self: start; position: relative; z-index: 1; border-bottom: 1px solid currentColor; padding: 0 0 12px; font-size: 10px; letter-spacing: .24em; }
 .closing a span { font-size: 18px; margin-left: 18px; }
+.closing-about { min-height: 0; padding: 0; border-top: 0; background: var(--graphite); color: var(--paper); display: grid; grid-template-columns: minmax(0, 58%) 1fr; grid-template-rows: auto; gap: 0; align-items: stretch; }
+.closing-logo { min-height: clamp(440px, 56vw, 760px); overflow: hidden; position: relative; z-index: 1; }
+.closing-logo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 56%; }
+.closing-content { padding: clamp(70px, 10vh, 120px) 6vw 7vh; position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; }
+.closing-kicker { margin: 0; font-size: 9px; letter-spacing: .28em; }
+.closing-content h2 { margin: auto 0 5vh; font: 500 clamp(48px, 5.6vw, 86px)/1.02 var(--serif); letter-spacing: -.05em; }
+.closing-content h2 em { color: var(--oat); font-weight: 500; white-space: nowrap; }
+.closing-signature { margin: 0 0 8vh; font: italic clamp(17px, 1.7vw, 25px)/1.4 var(--serif); white-space: nowrap; }
+.closing-signature span { margin: 0 .45em; color: var(--caramel); }
+.closing-about .closing-number { right: -2vw; top: 9%; color: transparent; -webkit-text-stroke-color: rgba(243,241,236,.1); transform: none; font-size: clamp(180px, 23vw, 340px); }
+.closing-about a { margin-top: auto; color: var(--paper); }
 footer { min-height: 100px; padding: 36px 3.5vw; display: flex; justify-content: space-between; align-items: center; font-size: 9px; letter-spacing: .22em; }
 footer b { font: inherit; }
 
@@ -206,8 +210,6 @@ footer b { font: inherit; }
   .story { grid-template-columns: 18% 1fr; padding-top: 13vh; padding-bottom: 15vh; }
   .story-heading { grid-column: 2; }
   .story-copy { grid-column: 2; margin-top: 9vh; }
-  .brand-spread { grid-template-columns: 1fr; gap: 3vh; padding-top: 2vh; padding-bottom: 4vh; }
-  .brand-note { margin-left: 55%; }
   .rule { min-height: auto; grid-template-columns: 1fr 1fr; padding-top: 14vh; }
   .rule-intro { grid-column: 1/-1; }
   .rule-intro h2 { margin-top: 7vh; }
@@ -224,6 +226,11 @@ footer b { font: inherit; }
   .work-detail { padding: 9vh 6vw 12vh; }
   .detail-figure { width: 86%; margin-right: 3vw; }
   .detail-story { grid-template-columns: 38% 1fr; margin-top: 10vh; }
+  .closing-about { grid-template-columns: 54% 46%; }
+  .closing-logo { min-height: 58vw; }
+  .closing-content { padding: 7vh 5vw 5vh; }
+  .closing-content h2 { font-size: clamp(44px, 6.7vw, 66px); }
+  .closing-signature { font-size: 16px; }
   .admin-shell { padding-left: 6vw; padding-right: 6vw; }
   .admin-intro { grid-template-columns: 1fr; }
   .admin-intro > p:first-child { grid-column: 1; }
@@ -241,9 +248,6 @@ footer b { font: inherit; }
   .story { display: block; padding-top: 12vh; padding-bottom: 13vh; }
   .story h2 { margin-top: 7vh; font-size: 13vw; }
   .story-copy { margin: 8vh 0 0 15vw; }
-  .brand-spread { padding-top: 1vh; padding-bottom: 4vh; }
-  .logo-card { height: min(82vw, 440px); }
-  .brand-note { margin: 2vh 0 0 30%; }
   .rule { display: block; padding-top: 12vh; padding-bottom: 12vh; }
   .rule-number { font-size: 68vw; margin: 12vh 0 10vh; letter-spacing: -.15em; }
   .rule-copy { margin: 0 0 0 15vw; }
@@ -252,6 +256,13 @@ footer b { font: inherit; }
   .closing-caption { justify-self: end; text-align: right; }
   .closing a { display: inline-block; justify-self: start; }
   .closing-number { right: -9vw; top: 48%; font-size: 56vw; }
+  .closing-about { display: block; padding: 0; }
+  .closing-logo { min-height: 92vw; height: 92vw; }
+  .closing-logo img { object-position: center 56%; }
+  .closing-content { min-height: 68vh; padding: 8vh 24px 6vh; }
+  .closing-content h2 { margin: 12vh 0 4vh; font-size: 12vw; }
+  .closing-signature { margin-bottom: 9vh; font-size: 16px; }
+  .closing-about .closing-number { right: -10vw; top: 50%; font-size: 62vw; }
   footer { padding: 30px 18px; display: grid; gap: 14px; }
   .collection-header { display: block; min-height: 43vh; padding: 7vh 24px 4vh; }
   .collection-header h1 { font-size: 19vw; margin: 5vh 0; white-space: nowrap; }
