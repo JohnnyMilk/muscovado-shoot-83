@@ -47,16 +47,16 @@ sup { font-size: .48em; vertical-align: super; line-height: 0; }
 
 .story { padding-top: 18vh; padding-bottom: 20vh; display: grid; grid-template-columns: 16% 45% 31%; column-gap: 4%; align-items: start; }
 .story h2, .rule h2 { font-family: var(--serif); font-size: clamp(48px, 6vw, 94px); font-weight: 500; line-height: 1.08; letter-spacing: -.05em; margin: 0; }
-.story h2 em { color: var(--caramel); font-weight: 500; }
+.story h2 em { display: inline-block; color: var(--caramel); font-size: .82em; font-weight: 500; white-space: nowrap; }
 .story-copy { margin-top: 20vh; max-width: 420px; font-size: 15px; line-height: 2.1; }
 .story-copy p { margin: 0 0 1.4em; }
 
-.brand-spread { background: var(--graphite); padding-top: 6vh; padding-bottom: 6vh; display: grid; grid-template-columns: 76% 1fr; gap: 6%; align-items: end; }
-.logo-card { height: clamp(300px, 48vw, 600px); background: var(--graphite); display: grid; place-items: center; overflow: hidden; }
-.logo-card img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.brand-spread { background: var(--graphite); padding-top: 3vh; padding-bottom: 4vh; display: grid; grid-template-columns: 76% 1fr; gap: 6%; align-items: end; }
+.logo-card { height: clamp(320px, 40vw, 560px); background: var(--graphite); display: grid; place-items: center; overflow: hidden; }
+.logo-card img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 49%; }
 .brand-note { color: var(--paper); }
 .brand-note span { font-size: 9px; letter-spacing: .3em; }
-.brand-note p { font: italic clamp(24px, 2.5vw, 40px)/1.25 var(--serif); }
+.brand-note p { white-space: nowrap; font: italic clamp(20px, 2.1vw, 34px)/1.25 var(--serif); }
 
 .rule { min-height: 100vh; padding-top: 17vh; padding-bottom: 14vh; display: grid; grid-template-columns: 36% 34% 30%; align-items: center; overflow: hidden; }
 .rule-intro { align-self: start; }
@@ -112,8 +112,10 @@ footer b { font: inherit; }
 .detail-heading p { grid-column: 1/-1; margin: 0 0 5vh; font-size: 9px; letter-spacing: .25em; }
 .detail-heading h1 { margin: 0; font: 500 clamp(64px, 11vw, 170px)/.82 var(--serif); letter-spacing: -.06em; }
 .detail-heading span { padding-bottom: 10px; font-size: 9px; letter-spacing: .22em; }
-.detail-figure { width: 78%; margin: 0 0 0 auto; position: relative; background: var(--cream); }
-.detail-figure img { display: block; width: 100%; max-height: 88vh; object-fit: contain; }
+.detail-figure { width: 72%; margin: 0 5vw 0 auto; position: relative; display: flex; justify-content: flex-end; }
+.detail-figure::before { content: ""; position: absolute; inset: 7% 6% -6% -7%; background: var(--cream); }
+.detail-figure img { position: relative; z-index: 1; display: block; width: auto; max-width: 100%; max-height: 84vh; object-fit: contain; }
+.detail-figure .watermark { z-index: 2; }
 .detail-story { margin: 12vh 8vw 14vh 0; display: grid; grid-template-columns: 42% 1fr; align-items: start; }
 .detail-number { margin: 0; color: var(--oat); font: 500 clamp(150px, 24vw, 350px)/.7 var(--serif); letter-spacing: -.1em; }
 .detail-number small { font-size: .13em; letter-spacing: .02em; color: var(--ink); }
@@ -204,7 +206,7 @@ footer b { font: inherit; }
   .story { grid-template-columns: 18% 1fr; padding-top: 13vh; padding-bottom: 15vh; }
   .story-heading { grid-column: 2; }
   .story-copy { grid-column: 2; margin-top: 9vh; }
-  .brand-spread { grid-template-columns: 1fr; gap: 4vh; padding-top: 5vh; padding-bottom: 5vh; }
+  .brand-spread { grid-template-columns: 1fr; gap: 3vh; padding-top: 2vh; padding-bottom: 4vh; }
   .brand-note { margin-left: 55%; }
   .rule { min-height: auto; grid-template-columns: 1fr 1fr; padding-top: 14vh; }
   .rule-intro { grid-column: 1/-1; }
@@ -220,7 +222,7 @@ footer b { font: inherit; }
   .work-02 { grid-column: 6 / 13; }
   .work-01 { grid-column: 1 / 8; }
   .work-detail { padding: 9vh 6vw 12vh; }
-  .detail-figure { width: 88%; }
+  .detail-figure { width: 86%; margin-right: 3vw; }
   .detail-story { grid-template-columns: 38% 1fr; margin-top: 10vh; }
   .admin-shell { padding-left: 6vw; padding-right: 6vw; }
   .admin-intro { grid-template-columns: 1fr; }
@@ -239,8 +241,8 @@ footer b { font: inherit; }
   .story { display: block; padding-top: 12vh; padding-bottom: 13vh; }
   .story h2 { margin-top: 7vh; font-size: 13vw; }
   .story-copy { margin: 8vh 0 0 15vw; }
-  .brand-spread { padding-top: 4vh; padding-bottom: 5vh; }
-  .logo-card { height: min(92vw, 470px); }
+  .brand-spread { padding-top: 1vh; padding-bottom: 4vh; }
+  .logo-card { height: min(82vw, 440px); }
   .brand-note { margin: 2vh 0 0 30%; }
   .rule { display: block; padding-top: 12vh; padding-bottom: 12vh; }
   .rule-number { font-size: 68vw; margin: 12vh 0 10vh; letter-spacing: -.15em; }
@@ -267,8 +269,9 @@ footer b { font: inherit; }
   .detail-heading { display: block; margin-bottom: 5vh; }
   .detail-heading p { margin-bottom: 4vh; }
   .detail-heading h1 { font-size: 20vw; margin-bottom: 3vh; }
-  .detail-figure { width: 100%; }
-  .detail-figure img { max-height: none; }
+  .detail-figure { width: 94%; margin-right: 0; }
+  .detail-figure::before { inset: 5% 5% -5% -5%; }
+  .detail-figure img { width: 100%; max-height: none; }
   .detail-story { display: block; margin: 9vh 0 10vh; }
   .detail-number { font-size: 48vw; margin-bottom: 8vh; }
   .detail-story > div { margin-left: 13vw; font-size: 15px; }
