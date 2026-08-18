@@ -1,83 +1,123 @@
 # MUSCOVADO SHOOT⁸³
 
 Editorial photography portfolio for **MUSCOVADO SHOOT⁸³** — beginning with
-companion animals and extending to people, landscapes, and everyday scenes. Built as a
-static, dependency-free website for GitHub Pages.
+companion animals and extending to people, landscapes, cities, still life, and
+everyday scenes. The site is static, dependency-free, and deploys directly to
+GitHub Pages without Node.js or a build process.
 
 ## Pages
 
 - [`index.html`](index.html) — brand story and THE 83 RULE
-- [`gallery.html`](gallery.html) — the current curated collection
-- [`work.html`](work.html) — reusable master-detail story view, selected with
-  `?id=01`, `?id=02`, or `?id=03`
-- [`admin.html`](admin.html) — lightweight, offline JSON collection editor
+- [`gallery.html`](gallery.html) — progressively rendered current collection
+- [`work.html`](work.html) — reusable detail view selected with `?id=XX`
+- [`admin.html`](admin.html) — lightweight offline JSON collection editor
 
-Gallery photographs use native `loading="lazy"` and `decoding="async"`, so a
-future 83-work collection does not request every full image on initial load.
-Only the selected photograph is prioritised on the detail page. Work metadata
-for that detail view lives in the small dependency-free [`script.js`](script.js).
+The gallery renders works in batches of 12. Gallery previews use dedicated
+`-thumb.jpg` files with native lazy loading and asynchronous decoding; if a
+thumbnail is absent, the browser falls back to the full photograph. The detail
+view prioritises only its selected full-size image.
+
+## Collection data
+
+[`data/works.json`](data/works.json) is the single source of truth for titles,
+order, copy, image paths, and editorial metadata. Each record contains:
+
+```json
+{
+  "id": "13",
+  "scene": "INDOOR / SOFT LIGHT",
+  "category": "COMPANION",
+  "year": "2026",
+  "orientation": "portrait",
+  "image": "assets/photo-13.jpg",
+  "title": "聽見什麼",
+  "alt": "客觀的圖片描述",
+  "excerpt": "收藏頁故事引子",
+  "story": "完整 editorial micro-story",
+  "note": "攝影編輯觀點",
+  "position": "center 44%"
+}
+```
+
+Supported categories are `COMPANION`, `PORTRAIT`, `LANDSCAPE`, `CITY`,
+`STILL LIFE`, and `ORIGIN`. Orientation is `portrait`, `landscape`, or `square`.
+Records appear publicly in the same order as the JSON array and are capped at
+83 entries.
 
 ## Collection Desk CMS
 
-`admin.html` is an offline JSON editor without a server, login, token, or build
-process. Download [`data/works.json`](data/works.json) from GitHub, import it into
-the editor, add/delete/edit records, then download the regenerated `works.json`
-and upload it back to the same repository path. Nothing is sent from the editor
-to GitHub or another service.
+`admin.html` is an offline editor without a server, login, token, or API key:
 
-The CMS also includes a copyable writing prompt. Submit that prompt and a work
-photo to an AI tool, then paste the returned JSON object into **AI JSON IMPORT**.
-The editor parses it into the property form for review; an existing ID is
-updated and a new ID is added to the beginning. No AI API key is stored in or
-required by this site.
+1. Download `data/works.json` from GitHub.
+2. Import it into Collection Desk.
+3. Add, edit, delete, or reorder records.
+4. Optionally give the copyable writing brief and photograph to an AI tool,
+   then paste its JSON object into **AI JSON IMPORT**.
+5. Review all properties and download the regenerated `works.json`.
+6. Upload it back to `data/works.json` on GitHub.
 
-Records can be added, edited, deleted, and moved forward/backward in the final
-array order. The editor validates unique two-digit IDs and caps the collection
-at 83 records. Image paths always live under `assets/`, so the form presents
-that prefix as fixed, muted text and only asks for the filename.
-
-Photo files are still uploaded manually to the path recorded in each JSON item.
-If a manifest entry points to a missing photo, the public gallery and detail
-page render an editorial colour-and-pattern placeholder until the asset arrives.
-
-## Local preview
-
-No build step is required. Because the collection is loaded from a JSON file,
-preview the repository with any static file server rather than the `file://`
-protocol:
-
-```sh
-python3 -m http.server 8000
-```
-
-Then visit <http://localhost:8000>.
+The editor validates two-digit unique IDs, the 83-record limit, categories,
+four-digit years, and orientations. It confirms destructive deletion, marks
+unexported changes, and warns before closing a tab with changes that have not
+been downloaded. Imported data never leaves the browser.
 
 ## Photography assets
 
-The finished Morandi-gray logo card is loaded from this exact case-sensitive path:
+Image paths are case-sensitive and live under `assets/`:
 
 ```text
-assets/morandi_gray_logo.jpg
+assets/photo-01.jpg
+assets/photo-01-thumb.jpg
+…
+assets/photo-83.jpg
+assets/photo-83-thumb.jpg
 ```
 
-The final portfolio photographs are loaded from the existing GitHub assets:
+Recommended export settings:
 
-```text
-assets/photo-01.jpg  # 黃花之間
-assets/photo-02.jpg  # 那個眼神
-assets/photo-03.jpg  # 紅色習作
-```
+| Use | Long edge | JPEG quality | Target size |
+| --- | ---: | ---: | ---: |
+| Gallery thumbnail | 1200 px | 78–82% | 100–300 KB |
+| Detail photograph | 1800–2200 px | 82–86% | 250–900 KB |
 
-The About hero uses a dedicated, non-collection copy so the 83-work curation
-cycle cannot remove the homepage image:
+Export JPEGs in sRGB and remove unnecessary EXIF metadata. A missing thumbnail
+falls back to the full photograph; if both files are absent, the public site
+renders the editorial placeholder.
+
+The About hero is deliberately separate from the 83-work rotation:
 
 ```text
 assets/about-hero.jpg
 ```
 
-All image paths are relative and case-sensitive for GitHub Pages.
+The finished logo card is:
+
+```text
+assets/morandi_gray_logo.jpg
+```
+
+## Local preview
+
+Because the collection is loaded with `fetch`, use a static server rather than
+the `file://` protocol:
+
+```sh
+python3 -m http.server 8000
+```
+
+Then visit <http://localhost:8000>. Useful routes include:
+
+```text
+http://localhost:8000/gallery.html
+http://localhost:8000/work.html?id=13
+http://localhost:8000/admin.html
+```
 
 ## Deployment
 
-Publish the repository root through GitHub Pages. All links and asset paths are
-relative, so the site works from the project subdirectory without configuration.
+Publish the repository root through GitHub Pages. Links and asset paths are
+relative, while canonical and social metadata use the production URL:
+
+```text
+https://johnnymilk.github.io/muscovado-shoot-83/
+```

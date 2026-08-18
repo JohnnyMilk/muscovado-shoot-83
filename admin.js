@@ -1,10 +1,13 @@
-const fields = ["id", "scene", "image", "title", "alt", "excerpt", "story", "note", "position"];
+const fields = ["id", "scene", "category", "year", "orientation", "image", "title", "alt", "excerpt", "story", "note", "position"];
+const categories = ["COMPANION", "PORTRAIT", "LANDSCAPE", "CITY", "STILL LIFE", "ORIGIN"];
+const orientations = ["portrait", "landscape", "square"];
 const status = document.querySelector("#cms-status");
 const workspace = document.querySelector("#editor-workspace");
 const list = document.querySelector("#record-list");
 const form = document.querySelector("#record-form");
 let works = [];
 let selectedIndex = -1;
+let dirty = false;
 
 const promptText = `你是一位時裝雜誌與攝影師 portfolio 的圖片編輯。請仔細觀察我上傳的作品照片，為 MUSCOVADO SHOOT⁸³ 產生一筆 JSON property 初稿。
 
@@ -25,6 +28,9 @@ MUSCOVADO SHOOT⁸³ 從寵物攝影開始，但收藏不限於寵物，也包�
   "id": "兩位數作品編號；如果不知道請填 00",
   "title": "2 至 6 字中文標題；具體但不把畫面直接命名",
   "scene": "大寫英文場景，例如 FIELD / DAYLIGHT",
+  "category": "依主題選擇 COMPANION、PORTRAIT、LANDSCAPE、CITY、STILL LIFE 或 ORIGIN",
+  "year": "四位數拍攝或發表年份，例如 2026",
+  "orientation": "依照片比例填 portrait、landscape 或 square",
   "image": "assets/photo-編號.jpg",
   "alt": "客觀、簡潔的繁體中文圖片描述，供無障礙使用",
   "excerpt": "30 至 55 字的故事引子；製造情緒或懸念，不重複 alt",
@@ -40,8 +46,18 @@ function setStatus(message, type = "") {
   status.dataset.type = type;
 }
 
+function setDirty(value) {
+  dirty = value;
+  const indicator = document.querySelector("#dirty-state");
+  indicator.textContent = dirty ? "UNEXPORTED CHANGES" : "ALL CHANGES EXPORTED";
+  indicator.dataset.dirty = String(dirty);
+}
+
 function normalise(record = {}) {
   const output = Object.fromEntries(fields.map((field) => [field, String(record[field] ?? "").trim()]));
+  output.category ||= "COMPANION";
+  output.year ||= String(new Date().getFullYear());
+  output.orientation ||= "portrait";
   if (output.image && !output.image.startsWith("assets/")) output.image = `assets/${output.image.replace(/^\/+/, "")}`;
   return output;
 }
@@ -50,9 +66,14 @@ function validateCollection(value) {
   if (!Array.isArray(value)) throw new Error("JSON 最外層必須是一個 array。");
   if (value.length > 83) throw new Error("收藏不可超過 83 筆；請先刪除不保留的作品。");
   const records = value.map(normalise);
+  const incomplete = records.find((record) => fields.some((field) => !record[field]));
+  if (incomplete) throw new Error(`NO.${incomplete.id || "—"} 尚有未完成的 properties。`);
   const ids = records.map((record) => record.id);
   if (ids.some((id) => !/^\d{2}$/.test(id))) throw new Error("每筆作品都必須有兩位數字 id。");
   if (new Set(ids).size !== ids.length) throw new Error("作品 id 不可重複。");
+  if (records.some((record) => !categories.includes(record.category))) throw new Error("category 必須使用 CMS 提供的選項。");
+  if (records.some((record) => !/^\d{4}$/.test(record.year))) throw new Error("year 必須是四位數年份。");
+  if (records.some((record) => !orientations.includes(record.orientation))) throw new Error("orientation 必須是 portrait、landscape 或 square。");
   return records;
 }
 
@@ -112,6 +133,7 @@ function moveRecord(index, direction) {
   [works[index], works[destination]] = [works[destination], works[index]];
   selectedIndex = selectedIndex === index ? destination : selectedIndex === destination ? index : selectedIndex;
   renderList();
+  setDirty(true);
   setStatus("ORDER UPDATED LOCALLY · DOWNLOAD JSON TO KEEP IT", "success");
 }
 
@@ -120,19 +142,22 @@ function nextId() {
 }
 
 function openCollection(records, message) {
+  const startedEmpty = records.length === 0;
   works = records;
   workspace.hidden = false;
   renderList();
   if (works.length) selectRecord(0);
   else addRecord();
+  setDirty(startedEmpty);
   setStatus(message, "success");
 }
 
 function addRecord() {
   if (works.length >= 83) return setStatus("收藏已達 83 筆，請先刪除一筆作品。", "error");
   const id = nextId();
-  works.unshift(normalise({ id, image: `assets/photo-${id}.jpg`, position: "center center" }));
+  works.unshift(normalise({ id, image: `assets/photo-${id}.jpg`, position: "center center", category: "COMPANION", year: String(new Date().getFullYear()), orientation: "portrait" }));
   selectRecord(0);
+  setDirty(true);
   setStatus(`NEW DRAFT · NO.${id}`);
 }
 
@@ -146,6 +171,7 @@ function saveRecord(event) {
   if (works.some((work, index) => work.id === record.id && index !== selectedIndex)) return setStatus(`NO.${record.id} 已經存在。`, "error");
   works[selectedIndex] = record;
   renderList();
+  setDirty(true);
   setStatus(`SAVED LOCALLY · NO.${record.id} ${record.title}`, "success");
 }
 
@@ -160,11 +186,13 @@ function parseAiRecord() {
     if (existing >= 0) {
       works[existing] = record;
       selectRecord(existing);
+      setDirty(true);
       setStatus(`AI JSON PARSED · UPDATED NO.${record.id} · REVIEW BEFORE DOWNLOAD`, "success");
     } else {
       if (works.length >= 83) throw new Error("收藏已達 83 筆，請先刪除一筆作品。");
       works.unshift(record);
       selectRecord(0);
+      setDirty(true);
       setStatus(`AI JSON PARSED · ADDED NO.${record.id} · REVIEW BEFORE DOWNLOAD`, "success");
     }
   } catch (error) {
@@ -174,11 +202,14 @@ function parseAiRecord() {
 
 function deleteRecord() {
   if (selectedIndex < 0 || !works.length) return;
+  const target = works[selectedIndex];
+  if (!window.confirm(`確定要刪除 NO.${target.id} — ${target.title || "未命名作品"}？`)) return;
   const [removed] = works.splice(selectedIndex, 1);
   selectedIndex = Math.min(selectedIndex, works.length - 1);
   renderList();
   if (works.length) selectRecord(selectedIndex);
   else addRecord();
+  setDirty(true);
   setStatus(`DELETED LOCALLY · NO.${removed.id}`, "success");
 }
 
@@ -191,6 +222,7 @@ function downloadJson() {
     link.download = "works.json";
     link.click();
     URL.revokeObjectURL(link.href);
+    setDirty(false);
     setStatus(`DOWNLOADED · ${output.length} WORKS · NOW UPLOAD TO data/works.json`, "success");
   } catch (error) {
     setStatus(`DOWNLOAD FAILED · ${error.message}`, "error");
@@ -201,12 +233,19 @@ document.querySelector("#json-file").addEventListener("change", async (event) =>
   try {
     const [file] = event.target.files;
     if (!file) return;
+    if (dirty && !window.confirm("目前有尚未匯出的修改。確定要匯入另一份 JSON 並捨棄這些修改嗎？")) {
+      event.target.value = "";
+      return;
+    }
     openCollection(validateCollection(JSON.parse(await file.text())), `IMPORTED · ${file.name}`);
   } catch (error) {
     setStatus(`IMPORT FAILED · ${error.message}`, "error");
   }
 });
-document.querySelector("#new-collection").addEventListener("click", () => openCollection([], "NEW EMPTY COLLECTION"));
+document.querySelector("#new-collection").addEventListener("click", () => {
+  if (dirty && !window.confirm("目前有尚未匯出的修改。確定要建立空白收藏嗎？")) return;
+  openCollection([], "NEW EMPTY COLLECTION");
+});
 document.querySelector("#add-record").addEventListener("click", addRecord);
 document.querySelector("#delete-record").addEventListener("click", deleteRecord);
 document.querySelector("#download-json").addEventListener("click", downloadJson);
@@ -223,3 +262,9 @@ document.querySelector("#copy-prompt").addEventListener("click", async () => {
   setStatus("AI PROMPT COPIED", "success");
 });
 form.addEventListener("submit", saveRecord);
+form.addEventListener("input", () => setDirty(true));
+window.addEventListener("beforeunload", (event) => {
+  if (!dirty) return;
+  event.preventDefault();
+  event.returnValue = "";
+});

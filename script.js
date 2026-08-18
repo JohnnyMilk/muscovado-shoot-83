@@ -1,4 +1,5 @@
 const DATA_URL = "data/works.json";
+const BATCH_SIZE = 12;
 
 async function loadWorks() {
   const response = await fetch(DATA_URL, { cache: "no-cache" });
@@ -13,63 +14,128 @@ function el(tag, className, text) {
   return node;
 }
 
-function addImageFallback(image, container, work) {
-  image.addEventListener("error", () => {
+function thumbnailFor(work) {
+  return work.image.replace(/(\.[a-z0-9]+)$/i, "-thumb$1");
+}
+
+function addImageFallback(image, container, work, fallbackSource = "") {
+  let triedFallback = false;
+  const handleError = () => {
+    if (fallbackSource && !triedFallback && image.src !== new URL(fallbackSource, document.baseURI).href) {
+      triedFallback = true;
+      image.src = fallbackSource;
+      return;
+    }
+    image.removeEventListener("error", handleError);
     image.remove();
     container.classList.add("image-missing");
     const art = el("span", "missing-art");
     art.append(el("strong", "", `NO.${work.id}`), el("small", "", "IMAGE PENDING"));
     container.prepend(art);
-  }, { once: true });
+  };
+  image.addEventListener("error", handleError);
+}
+
+function createWorkCard(work, index) {
+  const layout = ["03", "02", "01"][index % 3];
+  const article = el("article", `work work-${layout}`);
+  const link = el("a");
+  link.href = `work.html?id=${encodeURIComponent(work.id)}`;
+  link.setAttribute("aria-label", `閱讀 NO.${work.id} ${work.title}完整故事`);
+
+  const figure = el("figure", "image-frame work-image");
+  const image = el("img");
+  image.src = thumbnailFor(work);
+  image.alt = work.alt;
+  image.loading = "lazy";
+  image.decoding = "async";
+  image.style.objectPosition = work.position || "center";
+  addImageFallback(image, figure, work, work.image);
+  figure.append(image, el("span", "placeholder-label", `IMAGE / ${work.id}`));
+  const mark = el("span", "watermark");
+  mark.innerHTML = "MS<sup>83</sup>";
+  figure.append(mark);
+
+  const meta = el("div", "work-meta");
+  meta.append(el("span", "", `NO.${work.id}`), el("span", "", `${work.category} · ${work.year}`));
+  link.append(figure, meta, el("h2", "", work.title), el("p", "", work.excerpt), el("span", "read-story", "READ THE STORY ↗"));
+  article.append(link);
+  return article;
 }
 
 function renderGallery(works) {
   const grid = document.querySelector("#gallery-grid");
   grid.replaceChildren();
-  const count = String(Math.min(works.length, 83)).padStart(2, "0");
+  const collection = works.slice(0, 83);
+  const count = String(collection.length).padStart(2, "0");
   document.querySelector("#collection-current").textContent = count;
   document.querySelector("#collection-total").textContent = count;
+  let visible = 0;
 
-  works.slice(0, 83).forEach((work, index) => {
-    const layout = ["03", "02", "01"][index % 3];
-    const article = el("article", `work work-${layout}`);
-    const link = el("a");
-    link.href = `work.html?id=${encodeURIComponent(work.id)}`;
-    link.setAttribute("aria-label", `閱讀 NO.${work.id} ${work.title}完整故事`);
+  const renderBatch = () => {
+    const end = Math.min(visible + BATCH_SIZE, collection.length);
+    const fragment = document.createDocumentFragment();
+    for (let index = visible; index < end; index += 1) fragment.append(createWorkCard(collection[index], index));
+    grid.append(fragment);
+    visible = end;
 
-    const figure = el("figure", "image-frame work-image");
-    const image = el("img");
-    image.src = work.image;
-    image.alt = work.alt;
-    image.loading = "lazy";
-    image.decoding = "async";
-    image.style.objectPosition = work.position || "center";
-    addImageFallback(image, figure, work);
-    figure.append(image, el("span", "placeholder-label", `IMAGE / ${work.id}`));
-    const mark = el("span", "watermark");
-    mark.innerHTML = "MS<sup>83</sup>";
-    figure.append(mark);
+    document.querySelector("#load-more-wrap")?.remove();
+    if (visible < collection.length) {
+      const wrap = el("div", "load-more-wrap");
+      wrap.id = "load-more-wrap";
+      const button = el("button", "load-more", `LOAD THE NEXT EDIT · ${String(collection.length - visible).padStart(2, "0")} REMAIN`);
+      button.type = "button";
+      button.addEventListener("click", renderBatch, { once: true });
+      wrap.append(button);
+      grid.append(wrap);
+    }
+  };
 
-    const meta = el("div", "work-meta");
-    meta.append(el("span", "", `NO.${work.id}`), el("span", "", work.scene));
-    link.append(figure, meta, el("h2", "", work.title), el("p", "", work.excerpt), el("span", "read-story", "READ THE STORY ↗"));
-    article.append(link);
-    grid.append(article);
-  });
+  renderBatch();
+}
+
+function updateDetailMeta(work) {
+  const description = work.excerpt || work.alt;
+  document.querySelector('meta[name="description"]')?.setAttribute("content", description);
+  document.querySelector('meta[property="og:title"]')?.setAttribute("content", `${work.title} — MUSCOVADO SHOOT⁸³`);
+  document.querySelector('meta[property="og:description"]')?.setAttribute("content", description);
+  document.querySelector('meta[property="og:image"]')?.setAttribute("content", new URL(work.image, document.baseURI).href);
+  const detailUrl = new URL(`work.html?id=${encodeURIComponent(work.id)}`, document.baseURI).href;
+  document.querySelector('meta[property="og:url"]')?.setAttribute("content", detailUrl);
+  document.querySelector('link[rel="canonical"]')?.setAttribute("href", detailUrl);
+}
+
+function renderMissingDetail(detail) {
+  document.title = "作品已離開收藏 — MUSCOVADO SHOOT⁸³";
+  const empty = el("section", "detail-empty");
+  empty.append(
+    el("p", "", "THE STORY HAS LEFT THE COLLECTION"),
+    el("h1", "", "這張作品，\n已離開目前收藏。")
+  );
+  const link = el("a", "", "BACK TO THE CURRENT COLLECTION ↗");
+  link.href = "gallery.html";
+  empty.append(link);
+  detail.replaceChildren(empty);
 }
 
 function renderDetail(works) {
   const detail = document.querySelector("#work-detail");
   const requestedId = new URLSearchParams(window.location.search).get("id");
-  const index = Math.max(0, works.findIndex((item) => item.id === requestedId));
-  const work = works[index] || works[0];
-  const previous = works[(index - 1 + works.length) % works.length];
-  const next = works[(index + 1) % works.length];
+  const index = works.findIndex((item) => item.id === requestedId);
+  if (index < 0) {
+    renderMissingDetail(detail);
+    return;
+  }
+
+  const work = works[index];
+  const previous = works[index - 1];
+  const next = works[index + 1];
   document.title = `${work.title} — MUSCOVADO SHOOT⁸³`;
+  updateDetailMeta(work);
 
   const heading = el("header", "detail-heading");
-  heading.append(el("p", "", `THE CURRENT COLLECTION / NO.${work.id}`), el("h1", "", work.title), el("span", "", work.scene));
-  const figure = el("figure", "detail-figure");
+  heading.append(el("p", "", `THE CURRENT COLLECTION / NO.${work.id}`), el("h1", "", work.title), el("span", "", `${work.category} · ${work.year} · ${work.scene}`));
+  const figure = el("figure", `detail-figure detail-${work.orientation}`);
   const image = el("img");
   image.src = work.image;
   image.alt = work.alt;
@@ -89,12 +155,12 @@ function renderDetail(works) {
 
   const nav = el("nav", "detail-nav");
   nav.setAttribute("aria-label", "作品切換");
-  const previousLink = el("a", "", "PREVIOUS STORY ←");
-  previousLink.href = `work.html?id=${encodeURIComponent(previous.id)}`;
+  const previousLink = previous ? el("a", "", "PREVIOUS STORY ←") : el("span", "is-boundary", "START OF THE EDIT");
+  if (previous) previousLink.href = `work.html?id=${encodeURIComponent(previous.id)}`;
   const all = el("a", "", "ALL WORKS");
   all.href = "gallery.html";
-  const nextLink = el("a", "", "NEXT STORY →");
-  nextLink.href = `work.html?id=${encodeURIComponent(next.id)}`;
+  const nextLink = next ? el("a", "", "NEXT STORY →") : el("span", "is-boundary", "END OF THE EDIT");
+  if (next) nextLink.href = `work.html?id=${encodeURIComponent(next.id)}`;
   nav.append(previousLink, all, nextLink);
   detail.replaceChildren(heading, figure, story, nav);
 }
