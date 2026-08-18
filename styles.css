@@ -1,6 +1,7 @@
 :root {
   --ink: #454442;
   --graphite: #5c5c5c;
+  --origin-yellow: #f5c982;
   --paper: #f3f1ec;
   --cream: #e6e2da;
   --caramel: #b98355;
@@ -74,8 +75,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .closing-kicker { margin: 0; font-size: 9px; letter-spacing: .28em; }
 .closing-content h2 { margin: auto 0 5vh; font: 500 clamp(48px, 5.6vw, 86px)/1.02 var(--serif); letter-spacing: -.05em; }
 .closing-content h2 em { color: var(--oat); font-weight: 500; white-space: nowrap; }
-.closing-signature { margin: 0 0 8vh; font: italic clamp(17px, 1.7vw, 25px)/1.4 var(--serif); white-space: nowrap; }
+.closing-signature { margin: 0 0 5vh; font: italic clamp(17px, 1.7vw, 25px)/1.4 var(--serif); white-space: nowrap; }
 .closing-signature span { margin: 0 .45em; color: var(--caramel); }
+.brand-colors { width: min(100%, 430px); margin-bottom: 6vh; }
+.brand-colors > p { max-width: 360px; margin: 0 0 3vh; color: rgba(243,241,236,.72); font-size: 12px; line-height: 1.9; }
+.brand-colors dl { margin: 0; border-top: 1px solid rgba(243,241,236,.2); }
+.brand-colors dl > div { padding: 12px 0; border-bottom: 1px solid rgba(243,241,236,.2); display: flex; justify-content: space-between; gap: 20px; font-size: 8px; line-height: 1.4; letter-spacing: .16em; }
+.brand-colors dt { display: flex; align-items: center; gap: 10px; }
+.brand-colors dd { margin: 0; color: rgba(243,241,236,.72); font-variant-numeric: tabular-nums; }
+.swatch { width: 9px; height: 9px; border: 1px solid rgba(255,255,255,.3); border-radius: 50%; flex: 0 0 auto; }
+.swatch-yellow { background: var(--origin-yellow); }
+.swatch-gray { background: var(--graphite); }
 .closing-about .closing-number { right: -2vw; top: 9%; color: transparent; -webkit-text-stroke-color: rgba(243,241,236,.1); transform: none; font-size: clamp(180px, 23vw, 340px); }
 .closing-about a { margin-top: auto; color: var(--paper); }
 footer { min-height: 100px; padding: 36px 3.5vw; display: flex; justify-content: space-between; align-items: center; font-size: 9px; letter-spacing: .22em; }
@@ -265,7 +275,8 @@ footer b { font: inherit; }
   .closing-logo img { object-position: center 56%; }
   .closing-content { min-height: 68vh; padding: 8vh 24px 6vh; }
   .closing-content h2 { margin: 12vh 0 4vh; font-size: 12vw; }
-  .closing-signature { margin-bottom: 9vh; font-size: 16px; }
+  .closing-signature { margin-bottom: 5vh; font-size: 16px; }
+  .brand-colors { margin-bottom: 7vh; }
   .closing-about .closing-number { right: -10vw; top: 50%; font-size: 62vw; }
   footer { padding: 30px 18px; display: grid; gap: 14px; }
   .collection-header { display: block; min-height: 43vh; padding: 7vh 24px 4vh; }
