@@ -51,10 +51,8 @@ Records appear publicly in the same order as the JSON array and are capped at
 1. Download `data/works.json` from GitHub.
 2. Import it into Collection Desk.
 3. Add, edit, delete, or reorder records.
-4. Optionally use the reusable instructions in
-   [`MUSCOVADO_EDITORIAL_SKILL.md`](MUSCOVADO_EDITORIAL_SKILL.md) to create an
-   Editorial Property Skill, upload a photograph to that Skill, then paste its
-   JSON object into **AI JSON IMPORT**.
+4. Optionally upload a photograph to the configured Editorial Property Skill,
+   then paste its JSON object into **AI JSON IMPORT**.
 5. Review all properties and download the regenerated `works.json`.
 6. Upload it back to `data/works.json` on GitHub.
 
