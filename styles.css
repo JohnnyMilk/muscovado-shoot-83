@@ -149,6 +149,7 @@ footer b { font: inherit; }
 .button-primary { background: var(--ink); color: var(--paper); }
 .button-secondary { justify-self: start; }
 .button-danger { border: 0; padding: 15px 0; background: transparent; color: #8b5d56; font: 500 10px/1 var(--sans); letter-spacing: .18em; cursor: pointer; }
+.button-danger:disabled { color: var(--brown); cursor: not-allowed; opacity: .65; }
 .button-primary:disabled { opacity: .35; cursor: not-allowed; }
 .json-toolbar { padding: 8vh 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto auto; gap: 18px; align-items: center; }
 .dirty-state { grid-column: 1/-1; justify-self: end; font-size: 9px; letter-spacing: .2em; color: var(--brown); }

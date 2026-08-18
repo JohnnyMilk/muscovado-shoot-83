@@ -41,8 +41,10 @@ order, copy, image paths, and editorial metadata. Each record contains:
 
 Supported categories are `COMPANION`, `PORTRAIT`, `LANDSCAPE`, `CITY`,
 `STILL LIFE`, and `ORIGIN`. Orientation is `portrait`, `landscape`, or `square`.
-Records appear publicly in the same order as the JSON array and are capped at
-83 entries.
+Photographs appear publicly in the same order as the JSON array and are capped
+at 83 entries. The single `ORIGIN` record is the permanent Issue Zero: it uses
+ID `00`, is pinned after the rotating photographs, and does not count toward
+the 83-work limit.
 
 ## Collection Desk CMS
 
@@ -56,10 +58,11 @@ Records appear publicly in the same order as the JSON array and are capped at
 5. Review all properties and download the regenerated `works.json`.
 6. Upload it back to `data/works.json` on GitHub.
 
-The editor validates two-digit unique IDs, the 83-record limit, categories,
-four-digit years, and orientations. It confirms destructive deletion, marks
-unexported changes, and warns before closing a tab with changes that have not
-been downloaded. Imported data never leaves the browser.
+The editor validates two-digit unique IDs, the 83-photograph limit, categories,
+four-digit years, and orientations. It pins the single `ORIGIN` record as
+permanent Issue Zero and excludes it from the limit. It confirms destructive
+deletion, marks unexported changes, and warns before closing a tab with changes
+that have not been downloaded. Imported data never leaves the browser.
 
 ## Photography assets
 
@@ -90,7 +93,11 @@ The About hero is deliberately separate from the 83-work rotation:
 assets/about-hero.jpg
 ```
 
-The finished logo card is:
+The same photograph currently opens the collection as `photo-01.jpg`; its
+dedicated full-size and thumbnail exports keep the permanent About asset
+independent from future collection rotation.
+
+The finished logo card also serves as the permanent Issue Zero image:
 
 ```text
 assets/morandi_gray_logo.jpg
