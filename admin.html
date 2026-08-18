@@ -28,12 +28,6 @@
       <p>所有內容只在你的瀏覽器中處理。匯入 GitHub 下載的 works.json，新增、修改或刪除作品，最後下載新的 JSON 再自行上傳。</p>
     </header>
 
-    <section class="cms-prompt" aria-labelledby="prompt-title">
-      <div><p>AI WRITING BRIEF</p><h2 id="prompt-title">先讓 AI 理解這本雜誌。</h2><p>將提示詞連同作品照片交給 AI，再把產生的 properties 貼回編輯器。</p></div>
-      <textarea id="ai-prompt" rows="20" readonly></textarea>
-      <button id="copy-prompt" class="button-secondary" type="button">COPY PROMPT</button>
-    </section>
-
     <section class="json-toolbar" aria-label="JSON 檔案操作">
       <label class="file-drop compact">匯入 works.json<input id="json-file" type="file" accept="application/json,.json"><span>內容不會上傳到任何服務</span></label>
       <button id="new-collection" class="button-secondary" type="button">START EMPTY</button>
@@ -42,14 +36,14 @@
     </section>
 
     <section class="json-paste" aria-labelledby="json-paste-title">
-      <div><p>AI JSON IMPORT</p><h2 id="json-paste-title">貼上，然後校對。</h2><p>接受 AI 產生的單一 JSON object。若編號已存在會更新該筆；新編號則會新增到收藏最前面。</p></div>
+      <div><p>AI JSON IMPORT</p><h2 id="json-paste-title">貼上，然後校對。</h2><p>將 Editorial Property Skill 產生的單一 JSON object 貼在這裡。若編號已存在會更新該筆；新編號則會新增到收藏最前面。</p></div>
       <label>JSON object<textarea id="json-record" rows="12" spellcheck="false" placeholder='{"id":"04","title":"…"}'></textarea></label>
       <button id="parse-record" class="button-secondary" type="button">PARSE INTO EDITOR ↗</button>
     </section>
 
     <section id="editor-workspace" class="editor-workspace" hidden>
       <aside class="record-sidebar">
-        <div><p>COLLECTION</p><span id="record-count">00 / 83</span></div>
+        <div><p>COLLECTION</p><span id="record-count">00 / 83 + ISSUE ZERO</span></div>
         <ol id="record-list"></ol>
         <button id="add-record" class="button-secondary" type="button">＋ ADD A WORK</button>
       </aside>

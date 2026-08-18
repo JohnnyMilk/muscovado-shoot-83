@@ -149,13 +149,8 @@ footer b { font: inherit; }
 .button-primary { background: var(--ink); color: var(--paper); }
 .button-secondary { justify-self: start; }
 .button-danger { border: 0; padding: 15px 0; background: transparent; color: #8b5d56; font: 500 10px/1 var(--sans); letter-spacing: .18em; cursor: pointer; }
+.button-danger:disabled { color: var(--brown); cursor: not-allowed; opacity: .65; }
 .button-primary:disabled { opacity: .35; cursor: not-allowed; }
-.cms-prompt { padding: 8vh 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 38% 1fr; gap: 4vh 6vw; }
-.cms-prompt > div p:first-child { font-size: 9px; letter-spacing: .25em; }
-.cms-prompt h2 { margin: 3vh 0; font: 500 clamp(34px, 4vw, 58px)/1.1 var(--serif); }
-.cms-prompt > div p:last-child { max-width: 380px; font-size: 13px; line-height: 1.9; }
-.cms-prompt textarea { padding: 26px; border: 0; background: var(--mist); color: var(--ink); font: 400 14px/1.8 var(--sans); resize: vertical; }
-.cms-prompt .button-secondary { grid-column: 2; }
 .json-toolbar { padding: 8vh 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto auto; gap: 18px; align-items: center; }
 .dirty-state { grid-column: 1/-1; justify-self: end; font-size: 9px; letter-spacing: .2em; color: var(--brown); }
 .dirty-state[data-dirty="true"] { color: #8b5d56; }
@@ -301,8 +296,6 @@ footer b { font: inherit; }
   .admin-shell { padding: 8vh 18px 12vh; }
   .admin-intro { padding-bottom: 9vh; }
   .admin-intro h1 { font-size: 15vw; }
-  .cms-prompt { display: block; }
-  .cms-prompt textarea { width: 100%; margin: 5vh 0 3vh; }
   .json-paste { display: block; }
   .json-paste textarea { width: 100%; margin: 5vh 0 3vh; }
   .json-toolbar { grid-template-columns: 1fr; }

@@ -9,37 +9,17 @@ let works = [];
 let selectedIndex = -1;
 let dirty = false;
 
-const promptText = `你是一位時裝雜誌與攝影師 portfolio 的圖片編輯。請仔細觀察我上傳的作品照片，為 MUSCOVADO SHOOT⁸³ 產生一筆 JSON property 初稿。
+function isOrigin(record) {
+  return record.category === "ORIGIN";
+}
 
-MUSCOVADO SHOOT⁸³ 從寵物攝影開始，但收藏不限於寵物，也包含人物、風景、城市、靜物與日常片刻。請先依照片本身判斷主題，不要預設畫面中一定有寵物，也不要為沒有生命的景物套用寵物敘事。
+function photographCount(records = works) {
+  return records.filter((record) => !isOrigin(record)).length;
+}
 
-你不是在替照片寫圖說，而是在替一個瞬間找到故事。品牌語氣簡約、克制、有畫面感，像攝影師 portfolio 與 fashion editorial；不使用浮誇、過度可愛、雞湯或推銷式語言。使用繁體中文，攝影術語與 scene 保留英文。
-
-寫作方法：
-1. 先找出照片中最有張力的一個細節，例如視線、距離、光線、動作、空氣或即將改變的狀態；不要逐項盤點畫面裡有什麼。
-2. excerpt 要像雜誌目錄裡的一句引子，留下懸念，不要濃縮 alt。
-3. story 要是一篇短小的 editorial micro-story：從一個具體瞬間進場，中段讓觀看角度或情緒產生轉折，結尾留下餘韻。可連結人人熟悉的等待、靠近、離開、休息或偶遇，但不要套用固定模板。
-4. 可以使用比喻、節奏與「像是／彷彿」等克制的想像，讓文字超越畫面描述；不可把想像寫成已知事實，也不可杜撰人物身分、動物背景、地點、關係或事件。
-5. 長短句交錯，每筆作品應有自己的語氣。避免「在這張照片中」、「畫面呈現」、「捕捉了」、「彷彿在訴說」等制式 AI 開場。
-6. alt 是唯一需要保持完全客觀的欄位；note 則從攝影編輯角度談觀看方法，不要重複 story。
-
-請只輸出一個 JSON object，不要 Markdown code fence，也不要補充說明。格式如下：
-{
-  "id": "兩位數作品編號；如果不知道請填 00",
-  "title": "2 至 6 字中文標題；具體但不把畫面直接命名",
-  "scene": "大寫英文場景，例如 FIELD / DAYLIGHT",
-  "category": "依主題選擇 COMPANION、PORTRAIT、LANDSCAPE、CITY、STILL LIFE 或 ORIGIN",
-  "year": "四位數拍攝或發表年份，例如 2026",
-  "orientation": "依照片比例填 portrait、landscape 或 square",
-  "image": "assets/photo-編號.jpg",
-  "alt": "客觀、簡潔的繁體中文圖片描述，供無障礙使用",
-  "excerpt": "30 至 55 字的故事引子；製造情緒或懸念，不重複 alt",
-  "story": "110 至 180 字、具有進場／轉折／餘韻的 editorial micro-story；容許克制想像，但不把未知資訊寫成事實",
-  "note": "25 至 60 字的 editorial note；談光線、色彩、構圖、姿態或觀看方式，不重複 story",
-  "position": "建議的 CSS object-position，例如 center 45%"
-}`;
-
-document.querySelector("#ai-prompt").value = promptText;
+function pinOrigin(records) {
+  return [...records.filter((record) => !isOrigin(record)), ...records.filter(isOrigin)];
+}
 
 function setStatus(message, type = "") {
   status.textContent = message;
@@ -64,7 +44,6 @@ function normalise(record = {}) {
 
 function validateCollection(value) {
   if (!Array.isArray(value)) throw new Error("JSON 最外層必須是一個 array。");
-  if (value.length > 83) throw new Error("收藏不可超過 83 筆；請先刪除不保留的作品。");
   const records = value.map(normalise);
   const incomplete = records.find((record) => fields.some((field) => !record[field]));
   if (incomplete) throw new Error(`NO.${incomplete.id || "—"} 尚有未完成的 properties。`);
@@ -72,13 +51,18 @@ function validateCollection(value) {
   if (ids.some((id) => !/^\d{2}$/.test(id))) throw new Error("每筆作品都必須有兩位數字 id。");
   if (new Set(ids).size !== ids.length) throw new Error("作品 id 不可重複。");
   if (records.some((record) => !categories.includes(record.category))) throw new Error("category 必須使用 CMS 提供的選項。");
+  const origins = records.filter(isOrigin);
+  if (origins.length > 1) throw new Error("收藏只能有一筆永久 Issue Zero。");
+  if (origins.some((record) => record.id !== "00")) throw new Error("永久 Issue Zero 必須使用 id 00。");
+  if (photographCount(records) > 83) throw new Error("攝影收藏不可超過 83 筆；Issue Zero 不計入限額。");
   if (records.some((record) => !/^\d{4}$/.test(record.year))) throw new Error("year 必須是四位數年份。");
   if (records.some((record) => !orientations.includes(record.orientation))) throw new Error("orientation 必須是 portrait、landscape 或 square。");
-  return records;
+  return pinOrigin(records);
 }
 
 function updateCount() {
-  document.querySelector("#record-count").textContent = `${String(works.length).padStart(2, "0")} / 83`;
+  const hasOrigin = works.some(isOrigin);
+  document.querySelector("#record-count").textContent = `${String(photographCount()).padStart(2, "0")} / 83${hasOrigin ? " + ISSUE ZERO" : ""}`;
   document.querySelector("#download-json").disabled = works.length === 0;
 }
 
@@ -102,13 +86,13 @@ function renderList() {
     const up = document.createElement("button");
     up.type = "button";
     up.textContent = "↑";
-    up.disabled = index === 0;
+    up.disabled = index === 0 || isOrigin(work);
     up.setAttribute("aria-label", `將 NO.${work.id} 往前移`);
     up.addEventListener("click", () => moveRecord(index, -1));
     const down = document.createElement("button");
     down.type = "button";
     down.textContent = "↓";
-    down.disabled = index === works.length - 1;
+    down.disabled = index === works.length - 1 || isOrigin(work) || isOrigin(works[index + 1]);
     down.setAttribute("aria-label", `將 NO.${work.id} 往後移`);
     down.addEventListener("click", () => moveRecord(index, 1));
     controls.append(up, down);
@@ -124,12 +108,17 @@ function selectRecord(index) {
   const record = works[index];
   fields.filter((field) => field !== "image").forEach((field) => { document.querySelector(`#${field === "id" ? "work-id" : field}`).value = record[field] || ""; });
   document.querySelector("#image-name").value = (record.image || "").replace(/^assets\//, "");
+  document.querySelector("#work-id").disabled = isOrigin(record);
+  document.querySelector("#category").disabled = isOrigin(record);
+  const deleteButton = document.querySelector("#delete-record");
+  deleteButton.disabled = isOrigin(record);
+  deleteButton.textContent = isOrigin(record) ? "ISSUE ZERO · PERMANENT" : "DELETE WORK";
   renderList();
 }
 
 function moveRecord(index, direction) {
   const destination = index + direction;
-  if (destination < 0 || destination >= works.length) return;
+  if (destination < 0 || destination >= works.length || isOrigin(works[index]) || isOrigin(works[destination])) return;
   [works[index], works[destination]] = [works[destination], works[index]];
   selectedIndex = selectedIndex === index ? destination : selectedIndex === destination ? index : selectedIndex;
   renderList();
@@ -138,12 +127,12 @@ function moveRecord(index, direction) {
 }
 
 function nextId() {
-  return String(Math.max(...works.map((work) => Number(work.id) || 0), 0) + 1).padStart(2, "0");
+  return String(Math.max(...works.filter((work) => !isOrigin(work)).map((work) => Number(work.id) || 0), 0) + 1).padStart(2, "0");
 }
 
 function openCollection(records, message) {
   const startedEmpty = records.length === 0;
-  works = records;
+  works = pinOrigin(records);
   workspace.hidden = false;
   renderList();
   if (works.length) selectRecord(0);
@@ -153,7 +142,7 @@ function openCollection(records, message) {
 }
 
 function addRecord() {
-  if (works.length >= 83) return setStatus("收藏已達 83 筆，請先刪除一筆作品。", "error");
+  if (photographCount() >= 83) return setStatus("攝影收藏已達 83 筆；Issue Zero 永久保留，請先刪除一張攝影作品。", "error");
   const id = nextId();
   works.unshift(normalise({ id, image: `assets/photo-${id}.jpg`, position: "center center", category: "COMPANION", year: String(new Date().getFullYear()), orientation: "portrait" }));
   selectRecord(0);
@@ -169,7 +158,11 @@ function saveRecord(event) {
   }));
   record.image = `assets/${document.querySelector("#image-name").value.trim().replace(/^assets\//, "").replace(/^\/+/, "")}`;
   if (works.some((work, index) => work.id === record.id && index !== selectedIndex)) return setStatus(`NO.${record.id} 已經存在。`, "error");
+  if (isOrigin(record) && record.id !== "00") return setStatus("Issue Zero 必須使用作品編號 00。", "error");
+  if (isOrigin(record) && works.some((work, index) => isOrigin(work) && index !== selectedIndex)) return setStatus("收藏只能有一筆永久 Issue Zero。", "error");
   works[selectedIndex] = record;
+  works = pinOrigin(works);
+  selectedIndex = works.findIndex((work) => work.id === record.id);
   renderList();
   setDirty(true);
   setStatus(`SAVED LOCALLY · NO.${record.id} ${record.title}`, "success");
@@ -182,15 +175,23 @@ function parseAiRecord() {
     const missing = fields.filter((field) => !record[field]);
     if (missing.length) throw new Error(`缺少 properties：${missing.join(", ")}`);
     if (!/^\d{2}$/.test(record.id)) throw new Error("id 必須是兩位數字。");
+    if (record.id === "00" && !isOrigin(record)) {
+      const assignedId = nextId();
+      record.id = assignedId;
+      record.image = record.image.replace(/photo-00(?=\.[a-z0-9]+$)/i, `photo-${assignedId}`);
+    }
     const existing = works.findIndex((work) => work.id === record.id);
+    if (isOrigin(record) && record.id !== "00") throw new Error("Issue Zero 必須使用 id 00。");
+    if (isOrigin(record) && works.some((work, index) => isOrigin(work) && index !== existing)) throw new Error("收藏只能有一筆永久 Issue Zero。");
     if (existing >= 0) {
       works[existing] = record;
       selectRecord(existing);
       setDirty(true);
       setStatus(`AI JSON PARSED · UPDATED NO.${record.id} · REVIEW BEFORE DOWNLOAD`, "success");
     } else {
-      if (works.length >= 83) throw new Error("收藏已達 83 筆，請先刪除一筆作品。");
+      if (!isOrigin(record) && photographCount() >= 83) throw new Error("攝影收藏已達 83 筆；Issue Zero 不計入限額，請先刪除一張攝影作品。");
       works.unshift(record);
+      works = pinOrigin(works);
       selectRecord(0);
       setDirty(true);
       setStatus(`AI JSON PARSED · ADDED NO.${record.id} · REVIEW BEFORE DOWNLOAD`, "success");
@@ -203,6 +204,7 @@ function parseAiRecord() {
 function deleteRecord() {
   if (selectedIndex < 0 || !works.length) return;
   const target = works[selectedIndex];
+  if (isOrigin(target)) return setStatus("ISSUE ZERO IS PERMANENT · 無法刪除", "error");
   if (!window.confirm(`確定要刪除 NO.${target.id} — ${target.title || "未命名作品"}？`)) return;
   const [removed] = works.splice(selectedIndex, 1);
   selectedIndex = Math.min(selectedIndex, works.length - 1);
@@ -250,17 +252,6 @@ document.querySelector("#add-record").addEventListener("click", addRecord);
 document.querySelector("#delete-record").addEventListener("click", deleteRecord);
 document.querySelector("#download-json").addEventListener("click", downloadJson);
 document.querySelector("#parse-record").addEventListener("click", parseAiRecord);
-document.querySelector("#copy-prompt").addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText(promptText);
-  } catch {
-    const prompt = document.querySelector("#ai-prompt");
-    prompt.select();
-    document.execCommand("copy");
-    window.getSelection()?.removeAllRanges();
-  }
-  setStatus("AI PROMPT COPIED", "success");
-});
 form.addEventListener("submit", saveRecord);
 form.addEventListener("input", () => setDirty(true));
 window.addEventListener("beforeunload", (event) => {

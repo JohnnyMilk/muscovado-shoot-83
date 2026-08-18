@@ -15,7 +15,20 @@ function el(tag, className, text) {
 }
 
 function thumbnailFor(work) {
+  if (work.category === "ORIGIN") return work.image;
   return work.image.replace(/(\.[a-z0-9]+)$/i, "-thumb$1");
+}
+
+function splitCollection(works) {
+  return {
+    photographs: works.filter((work) => work.category !== "ORIGIN"),
+    origins: works.filter((work) => work.category === "ORIGIN")
+  };
+}
+
+function orderedCollection(works) {
+  const { photographs, origins } = splitCollection(works);
+  return [...photographs.slice(0, 83), ...origins];
 }
 
 function addImageFallback(image, container, work, fallbackSource = "") {
@@ -66,8 +79,9 @@ function createWorkCard(work, index) {
 function renderGallery(works) {
   const grid = document.querySelector("#gallery-grid");
   grid.replaceChildren();
-  const collection = works.slice(0, 83);
-  const count = String(collection.length).padStart(2, "0");
+  const { photographs } = splitCollection(works);
+  const collection = orderedCollection(works);
+  const count = String(Math.min(photographs.length, 83)).padStart(2, "0");
   document.querySelector("#collection-current").textContent = count;
   document.querySelector("#collection-total").textContent = count;
   let visible = 0;
@@ -120,21 +134,23 @@ function renderMissingDetail(detail) {
 
 function renderDetail(works) {
   const detail = document.querySelector("#work-detail");
+  const collection = orderedCollection(works);
   const requestedId = new URLSearchParams(window.location.search).get("id");
-  const index = works.findIndex((item) => item.id === requestedId);
+  const index = collection.findIndex((item) => item.id === requestedId);
   if (index < 0) {
     renderMissingDetail(detail);
     return;
   }
 
-  const work = works[index];
-  const previous = works[index - 1];
-  const next = works[index + 1];
+  const work = collection[index];
+  const previous = collection[index - 1];
+  const next = collection[index + 1];
   document.title = `${work.title} — MUSCOVADO SHOOT⁸³`;
   updateDetailMeta(work);
 
   const heading = el("header", "detail-heading");
-  heading.append(el("p", "", `THE CURRENT COLLECTION / NO.${work.id}`), el("h1", "", work.title), el("span", "", `${work.category} · ${work.year} · ${work.scene}`));
+  const issueLabel = work.category === "ORIGIN" ? "ISSUE ZERO / PERMANENT ORIGIN" : `THE CURRENT COLLECTION / NO.${work.id}`;
+  heading.append(el("p", "", issueLabel), el("h1", "", work.title), el("span", "", `${work.category} · ${work.year} · ${work.scene}`));
   const figure = el("figure", `detail-figure detail-${work.orientation}`);
   const image = el("img");
   image.src = work.image;
@@ -148,7 +164,7 @@ function renderDetail(works) {
 
   const story = el("article", "detail-story");
   const number = el("p", "detail-number", work.id);
-  number.append(el("small", "", "/ 83"));
+  number.append(el("small", "", work.category === "ORIGIN" ? "/ ORIGIN" : "/ 83"));
   const copy = el("div");
   copy.append(el("p", "", work.story), el("p", "", work.note));
   story.append(number, copy);
