@@ -97,10 +97,18 @@ The same photograph currently opens the collection as `photo-01.jpg`; its
 dedicated full-size and thumbnail exports keep the permanent About asset
 independent from future collection rotation.
 
-The finished logo card also serves as the permanent Issue Zero image:
+The About closing uses the finished gray logo card:
 
 ```text
 assets/morandi_gray_logo.jpg
+```
+
+The logo began on **Morandi Yellow `#F5C982`** and later gained its website
+edition on **Morandi Gray `#5C5C5C`**. Issue Zero preserves the original yellow
+logo at:
+
+```text
+assets/morandi_yellow_logo.jpg
 ```
 
 ## Local preview
