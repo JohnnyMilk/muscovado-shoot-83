@@ -9,38 +9,6 @@ let works = [];
 let selectedIndex = -1;
 let dirty = false;
 
-const promptText = `你是一位時裝雜誌與攝影師 portfolio 的圖片編輯。請仔細觀察我上傳的作品照片，為 MUSCOVADO SHOOT⁸³ 產生一筆 JSON property 初稿。
-
-MUSCOVADO SHOOT⁸³ 從寵物攝影開始，但收藏不限於寵物，也包含人物、風景、城市、靜物與日常片刻。請先依照片本身判斷主題，不要預設畫面中一定有寵物，也不要為沒有生命的景物套用寵物敘事。
-
-你不是在替照片寫圖說，而是在替一個瞬間找到故事。品牌語氣簡約、克制、有畫面感，像攝影師 portfolio 與 fashion editorial；不使用浮誇、過度可愛、雞湯或推銷式語言。使用繁體中文，攝影術語與 scene 保留英文。
-
-寫作方法：
-1. 先找出照片中最有張力的一個細節，例如視線、距離、光線、動作、空氣或即將改變的狀態；不要逐項盤點畫面裡有什麼。
-2. excerpt 要像雜誌目錄裡的一句引子，留下懸念，不要濃縮 alt。
-3. story 要是一篇短小的 editorial micro-story：從一個具體瞬間進場，中段讓觀看角度或情緒產生轉折，結尾留下餘韻。可連結人人熟悉的等待、靠近、離開、休息或偶遇，但不要套用固定模板。
-4. 可以使用比喻、節奏與「像是／彷彿」等克制的想像，讓文字超越畫面描述；不可把想像寫成已知事實，也不可杜撰人物身分、動物背景、地點、關係或事件。
-5. 長短句交錯，每筆作品應有自己的語氣。避免「在這張照片中」、「畫面呈現」、「捕捉了」、「彷彿在訴說」等制式 AI 開場。
-6. alt 是唯一需要保持完全客觀的欄位；note 則從攝影編輯角度談觀看方法，不要重複 story。
-
-請只輸出一個 JSON object，不要 Markdown code fence，也不要補充說明。格式如下：
-{
-  "id": "兩位數作品編號；如果不知道請填 00",
-  "title": "2 至 6 字中文標題；具體但不把畫面直接命名",
-  "scene": "大寫英文場景，例如 FIELD / DAYLIGHT",
-  "category": "依主題選擇 COMPANION、PORTRAIT、LANDSCAPE、CITY、STILL LIFE 或 ORIGIN",
-  "year": "四位數拍攝或發表年份，例如 2026",
-  "orientation": "依照片比例填 portrait、landscape 或 square",
-  "image": "assets/photo-編號.jpg",
-  "alt": "客觀、簡潔的繁體中文圖片描述，供無障礙使用",
-  "excerpt": "30 至 55 字的故事引子；製造情緒或懸念，不重複 alt",
-  "story": "110 至 180 字、具有進場／轉折／餘韻的 editorial micro-story；容許克制想像，但不把未知資訊寫成事實",
-  "note": "25 至 60 字的 editorial note；談光線、色彩、構圖、姿態或觀看方式，不重複 story",
-  "position": "建議的 CSS object-position，例如 center 45%"
-}`;
-
-document.querySelector("#ai-prompt").value = promptText;
-
 function setStatus(message, type = "") {
   status.textContent = message;
   status.dataset.type = type;
@@ -250,17 +218,6 @@ document.querySelector("#add-record").addEventListener("click", addRecord);
 document.querySelector("#delete-record").addEventListener("click", deleteRecord);
 document.querySelector("#download-json").addEventListener("click", downloadJson);
 document.querySelector("#parse-record").addEventListener("click", parseAiRecord);
-document.querySelector("#copy-prompt").addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText(promptText);
-  } catch {
-    const prompt = document.querySelector("#ai-prompt");
-    prompt.select();
-    document.execCommand("copy");
-    window.getSelection()?.removeAllRanges();
-  }
-  setStatus("AI PROMPT COPIED", "success");
-});
 form.addEventListener("submit", saveRecord);
 form.addEventListener("input", () => setDirty(true));
 window.addEventListener("beforeunload", (event) => {
