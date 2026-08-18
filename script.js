@@ -64,7 +64,7 @@ function createWorkCard(work, index) {
   image.decoding = "async";
   image.style.objectPosition = work.position || "center";
   addImageFallback(image, figure, work, work.image);
-  figure.append(image, el("span", "placeholder-label", `IMAGE / ${work.id}`));
+  figure.append(image, el("span", "placeholder-label", work.scene));
   const mark = el("span", "watermark");
   mark.innerHTML = "MS<sup>83</sup>";
   figure.append(mark);
