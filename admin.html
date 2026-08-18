@@ -4,7 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f3f1ec">
   <title>Collection Desk — MUSCOVADO SHOOT⁸³</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="admin.js" defer></script>
 </head>
@@ -32,6 +38,7 @@
       <label class="file-drop compact">匯入 works.json<input id="json-file" type="file" accept="application/json,.json"><span>內容不會上傳到任何服務</span></label>
       <button id="new-collection" class="button-secondary" type="button">START EMPTY</button>
       <button id="download-json" class="button-primary" type="button" disabled>DOWNLOAD WORKS.JSON ↗</button>
+      <span id="dirty-state" class="dirty-state" data-dirty="false">ALL CHANGES EXPORTED</span>
     </section>
 
     <section class="json-paste" aria-labelledby="json-paste-title">
@@ -51,6 +58,11 @@
         <div class="field-pair">
           <label>作品編號<input id="work-id" inputmode="numeric" pattern="\d{2}" maxlength="2" required placeholder="04"></label>
           <label>Scene<input id="scene" required placeholder="FIELD / DAYLIGHT"></label>
+        </div>
+        <div class="field-trio">
+          <label>Category<select id="category" required><option>COMPANION</option><option>PORTRAIT</option><option>LANDSCAPE</option><option>CITY</option><option>STILL LIFE</option><option>ORIGIN</option></select></label>
+          <label>Year<input id="year" inputmode="numeric" pattern="\d{4}" maxlength="4" required placeholder="2026"></label>
+          <label>Orientation<select id="orientation" required><option value="portrait">Portrait</option><option value="landscape">Landscape</option><option value="square">Square</option></select></label>
         </div>
         <label>圖片檔名<span class="path-input"><span aria-hidden="true">assets/</span><input id="image-name" required placeholder="photo-04.jpg" aria-label="assets 資料夾內的圖片檔名"></span></label>
         <label>中文標題<input id="title" required placeholder="作品標題"></label>
